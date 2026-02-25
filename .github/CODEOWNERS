@@ -1,0 +1,20 @@
+# CODEOWNERS — BridgeShop
+# Defines required reviewers for pull requests.
+# Format: <path_pattern>  <@github_username>
+# Reference: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# --- Global: Douglas Puente reviews all changes ----
+*                                 @douglasdevsec
+
+# --- Security modules: mandatory review for security-sensitive code ---
+packages/bridgeshop/src/lib/security/**    @douglasdevsec
+packages/bridgeshop/src/modules/mcp/**    @douglasdevsec
+.github/workflows/**                       @douglasdevsec
+
+# --- Frontend: Vue 3 / Nuxt 3 ---
+packages/frontend/**                       @douglasdevsec
+
+# --- Infrastructure ---
+docker-compose.yml                         @douglasdevsec
+Dockerfile                                 @douglasdevsec
+.env.example                               @douglasdevsec
