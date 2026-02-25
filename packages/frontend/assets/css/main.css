@@ -1,56 +1,76 @@
 /* ============================================================
-   BridgeShop — Global Styles
-   Design System: Inter (body) + Space Grotesk (headings)
-   Palette: Deep navy / Electric indigo / Amber accent
+   BridgeShop — Global Design System
+   Inspired by: Clean, minimal, trusted e-commerce (Shopify-style)
+   Palette: Crisp white / Slate neutrals / Forest green / Warm black
+   Typography: Inter (body) · Space Grotesk (headings)
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap');
 
-/* --- CSS Custom Properties (Design Tokens) --- */
+/* ── Design Tokens ─────────────────────────────────────────── */
 :root {
-  /* Brand Colors */
-  --bs-primary: #4f46e5; /* Electric Indigo */
-  --bs-primary-dark: #3730a3;
-  --bs-primary-light: #818cf8;
-  --bs-accent: #f59e0b; /* Amber */
-  --bs-accent-dark: #d97706;
-  --bs-success: #10b981;
-  --bs-danger: #ef4444;
-  --bs-warning: #f59e0b;
+  /* Brand — Forest Green (trusted, conversion-optimized) */
+  --bs-primary:        #008060;   /* Shopify-inspired green */
+  --bs-primary-dark:   #00573f;
+  --bs-primary-light:  #00a87c;
+  --bs-primary-50:     #f0fdf4;   /* Very light green for hover backgrounds */
 
-  /* Neutrals */
-  --bs-bg: #0f0f1a; /* Deep navy */
-  --bs-surface: #1a1a2e;
-  --bs-surface-2: #252540;
-  --bs-border: #2d2d4a;
-  --bs-text: #e2e8f0;
-  --bs-text-muted: #94a3b8;
-  --bs-text-strong: #f8fafc;
+  /* Accent — Warm Coral */
+  --bs-accent:         #e75d49;
+  --bs-accent-light:   #ff7060;
+
+  /* Semantic */
+  --bs-success:        #008060;
+  --bs-danger:         #cc3300;
+  --bs-warning:        #f0a500;
+  --bs-info:           #0070f3;
+
+  /* Neutrals — Clean white-based scale */
+  --bs-bg:             #f6f6f1;   /* Off-white, warm */
+  --bs-bg-pure:        #ffffff;
+  --bs-surface:        #ffffff;
+  --bs-surface-2:      #f3f4f0;
+  --bs-border:         #e4e4de;
+  --bs-border-strong:  #c8c8c0;
+
+  /* Text */
+  --bs-text:           #1a1a1a;   /* Near-black */
+  --bs-text-muted:     #6b7280;
+  --bs-text-light:     #9ca3af;
+  --bs-text-inverse:   #ffffff;
 
   /* Typography */
-  --bs-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --bs-font-display: 'Space Grotesk', sans-serif;
+  --bs-font-body:      'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --bs-font-display:   'Space Grotesk', 'Inter', sans-serif;
 
-  /* Spacing scale */
-  --bs-radius-sm: 6px;
-  --bs-radius-md: 10px;
-  --bs-radius-lg: 16px;
-  --bs-radius-xl: 24px;
+  /* Border radius — Clean, slightly rounded corners */
+  --bs-radius-xs:  4px;
+  --bs-radius-sm:  6px;
+  --bs-radius-md:  8px;
+  --bs-radius-lg:  12px;
+  --bs-radius-xl:  16px;
+  --bs-radius-2xl: 24px;
 
-  /* Shadows */
-  --bs-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --bs-shadow-md: 0 4px 20px rgba(0, 0, 0, 0.5);
-  --bs-shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.6);
-  --bs-shadow-glow: 0 0 30px rgba(79, 70, 229, 0.3);
+  /* Shadows — Subtle, real-world depth */
+  --bs-shadow-xs:  0 1px 2px rgba(0, 0, 0, 0.05);
+  --bs-shadow-sm:  0 1px 4px rgba(0, 0, 0, 0.08);
+  --bs-shadow-md:  0 4px 12px rgba(0, 0, 0, 0.10);
+  --bs-shadow-lg:  0 8px 24px rgba(0, 0, 0, 0.12);
+  --bs-shadow-xl:  0 16px 40px rgba(0, 0, 0, 0.14);
 
   /* Transitions */
-  --bs-transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --bs-transition-fast:   150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --bs-transition:        200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --bs-transition-slow:   300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Spacing */
+  --bs-header-height: 64px;
+  --bs-container-max: 1280px;
+  --bs-container-pad: 1.5rem;
 }
 
-/* --- Reset & Base --- */
-*,
-*::before,
-*::after {
+/* ── Reset ──────────────────────────────────────────────────── */
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -60,6 +80,7 @@ html {
   font-size: 16px;
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
 }
 
 body {
@@ -72,51 +93,49 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* --- Typography --- */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+/* ── Typography ─────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
   font-family: var(--bs-font-display);
-  color: var(--bs-text-strong);
+  color: var(--bs-text);
   line-height: 1.2;
+  font-weight: 700;
 }
+
+h1 { font-size: clamp(2rem, 4vw, 3rem); }
+h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
+h3 { font-size: 1.25rem; }
+
+p { color: var(--bs-text-muted); }
 
 a {
-  color: var(--bs-primary-light);
-  text-decoration: none;
-  transition: color var(--bs-transition);
-}
-
-a:hover {
   color: var(--bs-primary);
+  text-decoration: none;
+  transition: color var(--bs-transition-fast);
 }
+a:hover { color: var(--bs-primary-dark); text-decoration: underline; }
 
-/* --- Utility Classes --- */
+/* ── Layout Utilities ───────────────────────────────────────── */
 .bs-container {
   width: 100%;
-  max-width: 1280px;
+  max-width: var(--bs-container-max);
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 var(--bs-container-pad);
 }
 
-.bs-surface {
+/* ── Surface / Card ─────────────────────────────────────────── */
+.bs-card {
   background: var(--bs-surface);
   border: 1px solid var(--bs-border);
-  border-radius: var(--bs-radius-md);
-}
-
-.bs-glass {
-  background: rgba(26, 26, 46, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--bs-radius-lg);
+  transition: box-shadow var(--bs-transition), transform var(--bs-transition);
 }
 
-/* --- Buttons --- */
+.bs-card:hover {
+  box-shadow: var(--bs-shadow-md);
+  transform: translateY(-2px);
+}
+
+/* ── Buttons ─────────────────────────────────────────────────── */
 .bs-btn {
   display: inline-flex;
   align-items: center;
@@ -124,149 +143,189 @@ a:hover {
   gap: 0.5rem;
   padding: 0.625rem 1.25rem;
   font-family: var(--bs-font-body);
-  font-size: 0.875rem;
-  font-weight: 500;
-  border-radius: var(--bs-radius-sm);
-  border: none;
+  font-size: 0.9375rem;   /* 15px — Shopify standard */
+  font-weight: 600;
+  line-height: 1;
+  border-radius: var(--bs-radius-md);
+  border: 1px solid transparent;
   cursor: pointer;
-  transition: all var(--bs-transition);
-  text-decoration: none;
+  transition: all var(--bs-transition-fast);
+  text-decoration: none !important;
   white-space: nowrap;
+  user-select: none;
 }
 
+/* Primary — Green CTA */
 .bs-btn-primary {
   background: var(--bs-primary);
-  color: #fff;
-  box-shadow: 0 0 20px rgba(79, 70, 229, 0.3);
+  color: var(--bs-text-inverse);
+  border-color: var(--bs-primary-dark);
+  box-shadow: 0 1px 0 rgba(0, 87, 63, 0.3), inset 0 1px 0 rgba(255,255,255,0.1);
 }
 .bs-btn-primary:hover {
   background: var(--bs-primary-dark);
+  border-color: var(--bs-primary-dark);
   transform: translateY(-1px);
-  box-shadow: var(--bs-shadow-glow);
+  box-shadow: var(--bs-shadow-sm);
 }
-.bs-btn-primary:active {
-  transform: scale(0.97);
+.bs-btn-primary:active { transform: translateY(0); }
+
+/* Secondary — White outline */
+.bs-btn-secondary {
+  background: var(--bs-surface);
+  color: var(--bs-text);
+  border-color: var(--bs-border-strong);
+  box-shadow: var(--bs-shadow-xs);
+}
+.bs-btn-secondary:hover {
+  background: var(--bs-surface-2);
+  border-color: var(--bs-border-strong);
 }
 
-.bs-btn-outline {
+/* Ghost */
+.bs-btn-ghost {
   background: transparent;
-  color: var(--bs-primary-light);
-  border: 1px solid var(--bs-border);
+  color: var(--bs-text-muted);
+  border-color: transparent;
 }
-.bs-btn-outline:hover {
-  border-color: var(--bs-primary);
-  color: var(--bs-primary);
-  background: rgba(79, 70, 229, 0.08);
+.bs-btn-ghost:hover {
+  background: var(--bs-surface-2);
+  color: var(--bs-text);
 }
 
+/* Disabled state */
 .bs-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none !important;
+  box-shadow: none !important;
 }
 
-/* --- Form Elements --- */
-.bs-input {
-  width: 100%;
-  padding: 0.625rem 0.875rem;
-  background: var(--bs-surface-2);
+/* Sizes */
+.bs-btn-sm { padding: 0.4rem 0.875rem; font-size: 0.8125rem; }
+.bs-btn-lg { padding: 0.875rem 1.75rem; font-size: 1rem; }
+
+/* Icon-only */
+.bs-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--bs-radius-md);
   border: 1px solid var(--bs-border);
-  border-radius: var(--bs-radius-sm);
-  color: var(--bs-text);
-  font-family: var(--bs-font-body);
-  font-size: 0.875rem;
-  transition:
-    border-color var(--bs-transition),
-    box-shadow var(--bs-transition);
-  outline: none;
-}
-.bs-input:focus {
-  border-color: var(--bs-primary);
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
-}
-.bs-input::placeholder {
+  background: var(--bs-surface);
   color: var(--bs-text-muted);
+  cursor: pointer;
+  transition: all var(--bs-transition-fast);
+  box-shadow: var(--bs-shadow-xs);
+}
+.bs-icon-btn:hover {
+  background: var(--bs-surface-2);
+  color: var(--bs-text);
+  border-color: var(--bs-border-strong);
 }
 
-/* --- Badges --- */
+/* ── Badge ───────────────────────────────────────────────────── */
 .bs-badge {
   display: inline-flex;
   align-items: center;
-  padding: 0.2em 0.6em;
+  padding: 0.2em 0.65em;
   font-size: 0.75rem;
   font-weight: 600;
   border-radius: 100px;
-  line-height: 1;
+  letter-spacing: 0.01em;
 }
-.bs-badge-primary {
-  background: rgba(79, 70, 229, 0.2);
-  color: var(--bs-primary-light);
+.bs-badge-primary { background: var(--bs-primary-50); color: var(--bs-primary-dark); }
+.bs-badge-success { background: #f0fdf4; color: #166534; }
+.bs-badge-danger  { background: #fef2f2; color: #991b1b; }
+.bs-badge-warning { background: #fffbeb; color: #92400e; }
+.bs-badge-neutral { background: var(--bs-surface-2); color: var(--bs-text-muted); }
+
+/* ── Form Elements ───────────────────────────────────────────── */
+.bs-input,
+.bs-select {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  background: var(--bs-surface);
+  border: 1px solid var(--bs-border-strong);
+  border-radius: var(--bs-radius-md);
+  color: var(--bs-text);
+  font-family: var(--bs-font-body);
+  font-size: 0.9375rem;
+  transition: border-color var(--bs-transition-fast), box-shadow var(--bs-transition-fast);
+  outline: none;
+  box-shadow: var(--bs-shadow-xs);
 }
-.bs-badge-success {
-  background: rgba(16, 185, 129, 0.2);
-  color: var(--bs-success);
+.bs-input:focus,
+.bs-select:focus {
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 3px rgba(0, 128, 96, 0.15);
 }
-.bs-badge-danger {
-  background: rgba(239, 68, 68, 0.2);
-  color: var(--bs-danger);
+.bs-input::placeholder { color: var(--bs-text-light); }
+
+.bs-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--bs-text);
+  margin-bottom: 0.375rem;
 }
 
-/* --- Animations --- */
-@keyframes bs-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* ── Divider ─────────────────────────────────────────────────── */
+.bs-divider {
+  border: none;
+  border-top: 1px solid var(--bs-border);
+  margin: 1.5rem 0;
 }
-@keyframes bs-pulse-glow {
-  0%,
-  100% {
-    box-shadow: 0 0 20px rgba(79, 70, 229, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(79, 70, 229, 0.6);
-  }
+
+/* ── Animations ──────────────────────────────────────────────── */
+@keyframes bs-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes bs-skeleton {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
 .bs-animate-in {
-  animation: bs-fade-in 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation: bs-fade-in 0.3s ease-out both;
 }
 
-/* --- Scrollbar --- */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+/* Skeleton loading */
+.bs-skeleton {
+  background: var(--bs-surface-2);
+  border-radius: var(--bs-radius-sm);
+  animation: bs-skeleton 1.5s ease-in-out infinite;
 }
-::-webkit-scrollbar-track {
-  background: var(--bs-bg);
-}
+
+/* ── Scrollbar ───────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bs-bg); }
 ::-webkit-scrollbar-thumb {
-  background: var(--bs-border);
-  border-radius: 3px;
+  background: var(--bs-border-strong);
+  border-radius: 100px;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: var(--bs-primary);
+::-webkit-scrollbar-thumb:hover { background: var(--bs-text-light); }
+
+/* ── Focus visible (accessibility) ──────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--bs-primary);
+  outline-offset: 2px;
 }
 
-/* --- NuxtLink active state --- */
-.router-link-active {
-  color: var(--bs-primary-light);
+/* ── Page transitions ────────────────────────────────────────── */
+.page-enter-active, .page-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
+.page-enter-from { opacity: 0; transform: translateY(8px); }
+.page-leave-to   { opacity: 0; transform: translateY(-4px); }
 
-/* --- Page transitions --- */
-.page-enter-active,
-.page-leave-active {
-  transition: all 0.25s ease;
-}
-.page-enter-from {
-  opacity: 0;
-  transform: translateY(12px);
-}
-.page-leave-to {
-  opacity: 0;
-  transform: translateY(-6px);
-}
+/* ── Utility ─────────────────────────────────────────────────── */
+.text-muted  { color: var(--bs-text-muted); }
+.text-sm     { font-size: 0.875rem; }
+.text-xs     { font-size: 0.75rem; }
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.truncate    { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
