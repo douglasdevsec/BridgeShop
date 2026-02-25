@@ -1,0 +1,62 @@
+# Dependencies
+node_modules
+
+# Environment — NEVER commit .env
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+dist
+.nuxt
+.output
+.cache
+
+# Exceptions for create-bridgeshop-app sample
+!packages/create-bridgeshop-app/sample/extensions/sample/dist
+!packages/create-bridgeshop-app/sample/themes/sample/dist
+
+# Extensions/Themes (not tracked in this repo)
+/extensions/*
+!extensions/agegate
+!extensions/azure_file_storage
+!extensions/google_login
+!extensions/s3_file_storage
+!extensions/resend
+!extensions/sendgrid
+!extensions/product_review
+/themes
+
+# Editors / IDE
+.idea/*
+.vscode
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log
+.log
+/logs
+
+# Runtime artifacts
+.bridgeshop
+/package-log.json
+/media
+/public
+.prettierignore
+.prettierrc
+
+# Config (generated at runtime)
+/config
+/packages/bridgeshop/config
+
+# Test output
+coverage
+/cypress/videos
+/cypress/screenshots
+
+# Misc
+.turbo
+/docs
+extensions
+mysqlToPostgres.js

@@ -1,0 +1,39 @@
+{
+  "name": "@bridgeshop/postgres-query-builder",
+  "version": "2.0.1",
+  "type": "module",
+  "description": "A type-safe PostgreSQL query builder for Node.js — part of the BridgeShop platform",
+  "main": "./dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dp/bridgeshop.git"
+  },
+  "keywords": [
+    "PostgreSQL",
+    "query builder",
+    "PostgreSQL query builder",
+    "nodejs PostgreSQL query builder",
+    "bridgeshop"
+  ],
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "compile": "tsc"
+  },
+  "author": "Douglas Puente (https://github.com/dp)",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/dp/bridgeshop/issues"
+  },
+  "homepage": "https://github.com/dp/bridgeshop/tree/main/packages/postgres-query-builder",
+  "dependencies": {
+    "pg": "^8.10.0",
+    "uniqid": "^5.3.0"
+  },
+  "engines": {
+    "node": ">= 18.0.0"
+  }
+}

@@ -1,0 +1,17 @@
+﻿{
+  "shop": {
+    "currency": "USD",
+    "language": "en",
+    "weightUnit": "kg",
+    "timezone": "UTC"
+  },
+  "system": {
+    "database": {
+      "host": "localhost",
+      "port": 5432,
+      "database": "BridgeShop",
+      "user": "admin",
+      "password": "123456"
+    }
+  }
+}
