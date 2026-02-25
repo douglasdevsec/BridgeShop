@@ -1,46 +1,73 @@
 /**
  * redisClient.ts
- * Singleton Redis client for BridgeShop.
- * Used by: sessions, JWT blacklist, rate limiting store.
+ * Cliente Redis singleton para BridgeShop.
+ * Compartido por: sesiones, lista negra JWT, almacén de rate limiting.
+ *
+ * Patrón singleton: una sola conexión por proceso Node.js para eficiencia.
+ * La reconexión automática maneja caídas temporales del servidor Redis.
  */
 import { createClient, type RedisClientType } from 'redis';
 
-let client: RedisClientType | null = null;
+/** Instancia única del cliente Redis — inicializada en la primera llamada */
+let cliente: RedisClientType | null = null;
 
 /**
- * Returns the shared Redis client instance.
- * Connects on first call, reuses on subsequent calls.
+ * Retorna la instancia compartida del cliente Redis.
+ * Crea la conexión en la primera llamada; la reutiliza en las siguientes.
+ *
+ * @example
+ *   const redis = getRedisClient()
+ *   await redis.set('clave', 'valor', { EX: 3600 })
  */
 export function getRedisClient(): RedisClientType {
-  if (!client) {
-    client = createClient({
+  if (!cliente) {
+    cliente = createClient({
       socket: {
-        host: process.env.REDIS_HOST ?? 'localhost',
-        port: Number(process.env.REDIS_PORT ?? 6379),
-        reconnectStrategy: (retries) => Math.min(retries * 100, 3000)
+        host: process.env['REDIS_HOST'] ?? 'localhost',
+        port: Number(process.env['REDIS_PORT'] ?? 6379),
+        // Estrategia de reconexión: espera creciente hasta 3 segundos máximo
+        reconnectStrategy: (intentos) => Math.min(intentos * 100, 3000)
       },
-      password: process.env.REDIS_PASSWORD || undefined
+      // Contraseña opcional — en desarrollo local generalmente no se requiere
+      password: process.env['REDIS_PASSWORD'] || undefined
     }) as RedisClientType;
 
-    client.on('error', (err) => {
-      console.error('[Redis] Connection error:', err.message);
-    });
-    client.on('ready', () => {
-      console.info('[Redis] Connected successfully');
+    // Manejo de errores de conexión — no bloquea el proceso pero registra el problema
+    cliente.on('error', (err: Error) => {
+      console.error('[Redis] Error de conexión:', err.message);
     });
 
-    // Connect (non-blocking — errors are handled by the error event)
-    client.connect().catch((err) => {
-      console.error('[Redis] Initial connect failed:', err.message);
+    cliente.on('ready', () => {
+      console.info('[Redis] Conectado exitosamente');
+    });
+
+    cliente.on('reconnecting', () => {
+      console.warn('[Redis] Reconectando...');
+    });
+
+    // Iniciar conexión de forma asíncrona — los errores son manejados por el evento 'error'
+    cliente.connect().catch((err: Error) => {
+      console.error('[Redis] Fallo en la conexión inicial:', err.message);
     });
   }
-  return client;
+
+  return cliente;
 }
 
-/** Gracefully disconnect Redis on app shutdown */
-export async function disconnectRedis(): Promise<void> {
-  if (client?.isOpen) {
-    await client.quit();
-    client = null;
+/**
+ * Desconecta Redis de forma segura al apagar la aplicación.
+ * Llama a esta función en los manejadores de señales SIGTERM/SIGINT.
+ *
+ * @example
+ *   process.on('SIGTERM', async () => {
+ *     await desconectarRedis()
+ *     process.exit(0)
+ *   })
+ */
+export async function desconectarRedis(): Promise<void> {
+  if (cliente?.isOpen) {
+    await cliente.quit();
+    cliente = null;
+    console.info('[Redis] Desconectado correctamente');
   }
 }

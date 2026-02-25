@@ -1,17 +1,26 @@
 /**
  * mcpAuth.ts
- * RBAC authentication middleware for MCP/Agent endpoints.
- * Covers: Phase 4 AEO — Control de Acceso para Agentes
+ * Middleware de autenticación RBAC para endpoints MCP/Agente.
+ * Contexto de seguridad: Fase 4 AEO — Control de Acceso para Agentes IA
  *
- * API Keys are stored hashed (SHA-256 + salt) in the database.
- * Roles: agent:read | agent:write | agent:admin
+ * Las API Keys se almacenan hasheadas (HMAC-SHA256 + salt) en la base de datos.
+ * Roles disponibles: agent:read | agent:write | agent:admin
+ *
+ * Jerarquía de roles: agent:admin > agent:write > agent:read
  */
-import { createHmac } from 'crypto';
-import type { RequestHandler, Request, Response, NextFunction } from 'express';
+import { createHmac } from 'node:crypto';
+import type { Request, Response, NextFunction, RequestHandler } from 'express';
+import { Pool } from 'pg';
 
+// ── Tipos exportados ───────────────────────────────────────────
+
+/** Roles disponibles para agentes IA */
 export type AgentRole = 'agent:read' | 'agent:write' | 'agent:admin';
 
-/** Extended Request with agent info attached after auth */
+/**
+ * Request extendida con información del agente autenticado.
+ * Disponible en las rutas después de pasar authenticateAgent().
+ */
 export interface AgentRequest extends Request {
   agent?: {
     id: string;
@@ -19,85 +28,132 @@ export interface AgentRequest extends Request {
   };
 }
 
+// ── Pool de conexión DB (reutiliza la instancia del proceso) ───
+let _pool: Pool | null = null;
+
+/** Obtiene el pool de PostgreSQL compartido para consultas de autenticación */
+function getPool(): Pool {
+  if (!_pool) {
+    _pool = new Pool({
+      host:     process.env['DB_HOST']     ?? 'localhost',
+      port:     Number(process.env['DB_PORT'] ?? 5432),
+      user:     process.env['DB_USER']     ?? 'postgres',
+      password: process.env['DB_PASSWORD'] ?? '',
+      database: process.env['DB_NAME']     ?? 'bridgeshop',
+      max: 5  // pool pequeño, solo para auth de agentes
+    });
+  }
+  return _pool;
+}
+
+// ── Funciones de hashing ───────────────────────────────────────
+
 /**
- * Hash an API key using HMAC-SHA256 for storage/comparison.
- * Never store raw API keys in the database.
+ * Hashea una API Key cruda usando HMAC-SHA256 con salt configurable.
+ * NUNCA almacenes API keys en texto plano en la base de datos.
+ *
+ * @param rawKey - API Key recibida del cliente
+ * @returns Hash hexadecimal de 64 caracteres
  */
 export function hashApiKey(rawKey: string): string {
-  const salt = process.env.MCP_API_KEY_SALT ?? 'bridgeshop-mcp-salt-change-me';
+  // Lee el salt del entorno — asegúrate de configurarlo en producción
+  const salt = process.env['MCP_API_KEY_SALT'] ?? 'bridgeshop-mcp-salt-change-me';
   return createHmac('sha256', salt).update(rawKey).digest('hex');
 }
 
+// ── Middleware de autenticación ────────────────────────────────
+
 /**
- * Middleware: authenticate and authorize MCP agent requests.
+ * Middleware: autentica y autoriza solicitudes de agentes MCP.
  *
- * @param requiredRole Minimum role needed to access the endpoint
+ * Verifica el header X-BridgeShop-Agent-Key contra la base de datos.
+ * Implementa jerarquía de roles para control de acceso granular.
+ *
+ * @param requiredRole - Rol mínimo requerido para acceder al endpoint
  *
  * @example
- *   router.get('/mcp/catalog', authenticateAgent('agent:read'), catalogHandler)
+ *   router.get('/mcp/catalog', authenticateAgent('agent:read'),  catalogHandler)
  *   router.post('/mcp/cart',   authenticateAgent('agent:write'), cartHandler)
  */
 export function authenticateAgent(requiredRole: AgentRole): RequestHandler {
-  return async (req: AgentRequest, res: Response, next: NextFunction) => {
+  return async (req: AgentRequest, res: Response, next: NextFunction): Promise<void> => {
+
+    // Leer API Key del header de la solicitud
     const rawKey = req.headers['x-bridgeshop-agent-key'] as string | undefined;
 
     if (!rawKey) {
-      res.status(401).json({ success: false, error: 'Agent API key required' });
+      res.status(401).json({ success: false, error: 'API Key de agente requerida' });
       return;
     }
 
     try {
       const keyHash = hashApiKey(rawKey);
+      const pool = getPool();
 
-      // Lookup the API key in the database (parameterized — safe from injection)
-      const { select, eq, and, isNull } = await import('@bridgeshop/postgres-query-builder');
-      const record = await select('agent_api_keys', ['id', 'role', 'rate_limit'])
-        .where(and(eq('key_hash', keyHash), isNull('revoked_at')))
-        .first();
+      // Consulta parametrizada — segura contra inyección SQL (OWASP A03)
+      const result = await pool.query<{ id: string; role: string }>(
+        `SELECT id, role
+           FROM agent_api_keys
+          WHERE key_hash   = $1
+            AND revoked_at IS NULL
+          LIMIT 1`,
+        [keyHash]
+      );
 
-      if (!record) {
-        res.status(401).json({ success: false, error: 'Invalid or revoked API key' });
+      // API Key no encontrada o ya revocada
+      if (result.rowCount === 0) {
+        res.status(401).json({ success: false, error: 'API Key inválida o revocada' });
         return;
       }
 
-      // Role hierarchy check: admin > write > read
-      const roleHierarchy: AgentRole[] = ['agent:read', 'agent:write', 'agent:admin'];
-      const agentLevel = roleHierarchy.indexOf(record.role as AgentRole);
-      const requiredLevel = roleHierarchy.indexOf(requiredRole);
+      const record = result.rows[0]!;
 
-      if (agentLevel < requiredLevel) {
+      // Verificación de jerarquía de roles
+      const jerarquia: AgentRole[] = ['agent:read', 'agent:write', 'agent:admin'];
+      const nivelAgente   = jerarquia.indexOf(record.role as AgentRole);
+      const nivelRequerido = jerarquia.indexOf(requiredRole);
+
+      if (nivelAgente < nivelRequerido) {
         res.status(403).json({
           success: false,
-          error: `Insufficient permissions. Required: ${requiredRole}, has: ${record.role}`
+          error: `Permisos insuficientes. Requerido: ${requiredRole}, tiene: ${record.role}`
         });
         return;
       }
 
-      // Attach agent info to request for downstream handlers
-      req.agent = { id: record.id as string, role: record.role as AgentRole };
+      // Adjuntar información del agente al request para handlers posteriores
+      req.agent = { id: record.id, role: record.role as AgentRole };
       next();
 
     } catch (err) {
-      console.error('[MCP Auth] Error:', err);
-      res.status(500).json({ success: false, error: 'Authentication service unavailable' });
+      console.error('[MCP Auth] Error de autenticación:', err);
+      res.status(500).json({ success: false, error: 'Servicio de autenticación no disponible' });
     }
   };
 }
 
+// ── Middleware de auditoría ────────────────────────────────────
+
 /**
- * Middleware: log every MCP tool call for security audit.
- * Call this AFTER authenticateAgent to have req.agent available.
+ * Middleware: registra cada llamada a herramienta MCP para auditoría de seguridad.
+ * Debe llamarse DESPUÉS de authenticateAgent() para tener req.agent disponible.
+ *
+ * Produce logs JSON estructurados compatibles con sistemas SIEM.
  */
 export const mcpAuditLog: RequestHandler = (req: AgentRequest, _res, next) => {
-  const tool = req.path.split('/').pop() ?? 'unknown';
+  const herramienta = req.path.split('/').pop() ?? 'desconocida';
+
+  // Log estructurado para análisis de seguridad
   console.info(JSON.stringify({
-    level: 'AUDIT',
-    service: 'mcp',
-    tool,
-    agentId: req.agent?.id,
-    role: req.agent?.role,
-    ip: req.ip,
-    timestamp: new Date().toISOString()
+    nivel:       'AUDITORIA',
+    servicio:    'mcp',
+    herramienta,
+    agenteId:    req.agent?.id,
+    rol:         req.agent?.role,
+    ip:          req.ip,
+    userAgent:   req.headers['user-agent'],
+    timestamp:   new Date().toISOString()
   }));
+
   next();
 };

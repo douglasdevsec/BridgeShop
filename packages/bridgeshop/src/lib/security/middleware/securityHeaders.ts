@@ -1,94 +1,124 @@
 /**
  * securityHeaders.ts
- * Configures Helmet.js with strict security headers
- * Covers: OWASP A05 – Security Misconfiguration
- * Applied per vulnerability-scanner skill checklist
+ * Configura Helmet.js con cabeceras de seguridad HTTP estrictas.
+ * Cobertura: OWASP A05 — Mala Configuración de Seguridad
+ *
+ * Lista de protecciones implementadas:
+ *  - Content-Security-Policy (CSP) con nonces dinámicos por solicitud
+ *  - X-Frame-Options: DENY — previene ataques de clickjacking
+ *  - Strict-Transport-Security (HSTS) — fuerza HTTPS por 1 año, con preload
+ *  - X-Content-Type-Options: nosniff — previene MIME sniffing
+ *  - Referrer-Policy — controla qué información de referente se comparte
+ *  - Permissions-Policy — desactiva APIs sensibles del navegador
+ *  - X-Powered-By: eliminado para no revelar la tecnología del servidor
  */
 import helmet from 'helmet';
 import type { RequestHandler } from 'express';
 
 /**
- * Generates a random nonce for use with CSP script-src directives.
- * The nonce is attached to res.locals and must be passed to the frontend template.
+ * Genera un nonce aleatorio de 16 bytes codificado en base64url.
+ * Se usa en la directiva script-src de CSP para permitir solo scripts autorizados.
+ *
+ * @returns Cadena de nonce lista para usar en atributos HTML y cabeceras CSP
  */
-export function generateNonce(): string {
-  const array = new Uint8Array(16);
-  crypto.getRandomValues(array);
-  return Buffer.from(array).toString('base64url');
+export function generarNonce(): string {
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  return Buffer.from(bytes).toString('base64url');
 }
 
 /**
- * Returns the Helmet middleware factory configured for BridgeShop.
- * Call this once during Express app initialization.
+ * Retorna el array de middlewares Helmet configurados para BridgeShop.
+ * Orden de aplicación: llama a este método una sola vez al inicializar Express.
+ *
+ * @example
+ *   import { cabecerasSeguridad } from './securityHeaders.js'
+ *   app.use(cabecerasSeguridad())
  */
-export function securityHeaders(): RequestHandler[] {
+export function cabecerasSeguridad(): RequestHandler[] {
   return [
-    // Content-Security-Policy with nonce support
+    // ── Content-Security-Policy con soporte de nonce ──────────
     helmet.contentSecurityPolicy({
       directives: {
         defaultSrc: ["'self'"],
+
+        // Solo permite scripts con nonce válido o de dominios de pago confiables
         scriptSrc: [
           "'self'",
-          // nonce dynamically injected via res.locals.cspNonce
           (_req, res) => `'nonce-${(res as any).locals.cspNonce}'`,
           'https://js.stripe.com',
           'https://www.paypal.com'
         ],
+
+        // Estilos con nonce o de Google Fonts
         styleSrc: [
           "'self'",
           (_req, res) => `'nonce-${(res as any).locals.cspNonce}'`,
           'https://fonts.googleapis.com'
         ],
-        fontSrc: ["'self'", 'https://fonts.gstatic.com'],
-        imgSrc: ["'self'", 'data:', 'https:'],
+
+        fontSrc:    ["'self'", 'https://fonts.gstatic.com'],
+        imgSrc:     ["'self'", 'data:', 'https:'],
+
+        // Conexiones API permitidas
         connectSrc: [
           "'self'",
           'https://api.stripe.com',
           'https://www.paypal.com',
+          // WebSocket en desarrollo local
           process.env.NODE_ENV === 'development' ? 'ws://localhost:*' : ''
         ].filter(Boolean) as string[],
-        frameSrc: ['https://js.stripe.com', 'https://www.paypal.com'],
-        frameAncestors: ["'none'"],        // Clickjacking defense
-        formAction: ["'self'"],
-        objectSrc: ["'none'"],
-        baseUri: ["'self'"],
-        upgradeInsecureRequests: []
+
+        // iframes solo para proveedores de pago
+        frameSrc:       ['https://js.stripe.com', 'https://www.paypal.com'],
+        frameAncestors: ["'none'"],   // Previene clickjacking completamente
+        formAction:     ["'self'"],   // Forms solo envían a nuestro dominio
+        objectSrc:      ["'none'"],   // Bloquea plugins (Flash, etc.)
+        baseUri:        ["'self'"],   // Previene inyección de base URL
+        upgradeInsecureRequests: []   // Fuerza HTTPS automáticamente
       }
     }),
 
-    // X-Frame-Options (legacy browsers)
+    // ── Protección clickjacking (navegadores legacy) ──────────
     helmet.frameguard({ action: 'deny' }),
 
-    // HTTP Strict Transport Security
+    // ── HTTP Strict Transport Security ────────────────────────
+    // maxAge: 1 año — obligatorio para calificación preload de HSTS
     helmet.hsts({
-      maxAge: 31_536_000, // 1 year
+      maxAge: 31_536_000,
       includeSubDomains: true,
       preload: true
     }),
 
-    // Prevent MIME-type sniffing
+    // ── Previene interpretación errónea de tipos MIME ─────────
     helmet.noSniff(),
 
-    // Referrer Policy
+    // ── Controla información de referente compartida ──────────
     helmet.referrerPolicy({ policy: 'strict-origin-when-cross-origin' }),
 
-    // Permissions Policy
+    // ── Política de dominios cruzados ─────────────────────────
     helmet.permittedCrossDomainPolicies({ permittedPolicies: 'none' }),
 
-    // Remove X-Powered-By
+    // ── Oculta que usamos Express/Node.js ────────────────────
     helmet.hidePoweredBy(),
 
-    // XSS Protection (legacy)
+    // ── Protección XSS para navegadores legacy ────────────────
     helmet.xssFilter()
   ];
 }
 
 /**
- * Middleware: generate a fresh CSP nonce per request and attach to res.locals
+ * Middleware: genera un nonce CSP fresco para cada solicitud HTTP.
+ * Debe montarse ANTES de contentSecurityPolicy para que res.locals.cspNonce esté disponible.
+ *
+ * @example
+ *   app.use(middlewareNonce())
+ *   app.use(cabecerasSeguridad())
  */
-export function cspNonceMiddleware(): RequestHandler {
+export function middlewareNonce(): RequestHandler {
   return (_req, res, next) => {
-    res.locals.cspNonce = generateNonce();
+    // Nuevo nonce por solicitud — no reutilizar entre requests
+    res.locals['cspNonce'] = generarNonce();
     next();
   };
 }

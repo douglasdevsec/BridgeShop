@@ -1,119 +1,146 @@
 /**
  * jwtService.ts
- * JWT access + refresh token management with rotation and Redis blacklist.
- * Covers: OWASP A07 – Identification and Authentication Failures
+ * Gestión de tokens JWT de acceso y actualización (refresh) con rotación automática.
+ * Cobertura: OWASP A07 — Fallos de Identificación y Autenticación
  *
- * Flow:
- *  1. Login → issue accessToken (15min) + refreshToken (7d, stored in HttpOnly cookie)
- *  2. Access token expires → POST /api/auth/refresh → rotate both tokens
- *  3. Logout → blacklist the refresh token in Redis (TTL = remaining lifetime)
+ * Flujo de autenticación:
+ *  1. Login → genera accessToken (15min) + refreshToken (7d, en cookie HttpOnly)
+ *  2. Token de acceso expirado → POST /api/auth/refresh → rota ambos tokens
+ *  3. Logout → agrega el refreshToken a la lista negra en Redis (TTL = vida restante)
+ *
+ * Seguridad del almacenamiento:
+ *  - accessToken: memoria del cliente (no localStorage — vulnerable a XSS)
+ *  - refreshToken: cookie HttpOnly + SameSite Strict + Secure + path restringido
  */
 import jwt from 'jsonwebtoken';
 import { getRedisClient } from '../redis/redisClient.js';
 
-// ── Types ─────────────────────────────────────────────────────
-export interface TokenPayload {
-  sub: string;        // user ID
-  email: string;
-  role: string;
-  iat?: number;
-  exp?: number;
+// ── Tipos ─────────────────────────────────────────────────────
+
+/** Carga útil (payload) incluida en cada token JWT */
+export interface PayloadToken {
+  sub: string;      // ID del usuario
+  email: string;    // Email del usuario
+  role: string;     // Rol: 'admin' | 'customer' | 'agent:read' | etc.
+  iat?: number;     // Timestamp de emisión (generado por jwt.sign)
+  exp?: number;     // Timestamp de expiración (generado por jwt.sign)
 }
 
-export interface TokenPair {
+/** Par de tokens generado en login o refresh */
+export interface ParTokens {
   accessToken: string;
   refreshToken: string;
 }
 
-// ── Constants ─────────────────────────────────────────────────
-const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET!;
-const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET!;
-const ACCESS_TTL = process.env.JWT_ACCESS_EXPIRES_IN ?? '15m';
-const REFRESH_TTL = process.env.JWT_REFRESH_EXPIRES_IN ?? '7d';
+// ── Constantes de configuración ───────────────────────────────
+const SECRETO_ACCESO  = process.env['JWT_ACCESS_SECRET']!;
+const SECRETO_REFRESH = process.env['JWT_REFRESH_SECRET']!;
+const TTL_ACCESO      = process.env['JWT_ACCESS_EXPIRES_IN']  ?? '15m';
+const TTL_REFRESH     = process.env['JWT_REFRESH_EXPIRES_IN'] ?? '7d';
 
-// Redis key prefix for blacklisted tokens
-const BLACKLIST_PREFIX = 'bridgeshop:jwt:blacklist:';
+/** Prefijo de clave Redis para tokens en lista negra */
+const PREFIJO_BLACKLIST = 'bridgeshop:jwt:blacklist:';
 
-// ── Token generation ──────────────────────────────────────────
+// ── Generación de tokens ──────────────────────────────────────
 
 /**
- * Generate a new access + refresh token pair for a user.
- * Call this on login and on every successful token refresh.
+ * Genera un nuevo par de tokens para un usuario autenticado.
+ * Llama a esta función en el login y en cada refresh exitoso.
+ *
+ * @param payload - Datos del usuario a incluir en el token
+ * @returns Par {accessToken, refreshToken}
  */
-export function generateTokenPair(payload: TokenPayload): TokenPair {
+export function generarParTokens(payload: PayloadToken): ParTokens {
   const base = { sub: payload.sub, email: payload.email, role: payload.role };
 
-  const accessToken = jwt.sign(base, ACCESS_SECRET, {
-    expiresIn: ACCESS_TTL,
+  const accessToken = jwt.sign(base, SECRETO_ACCESO, {
+    expiresIn: TTL_ACCESO,
     algorithm: 'HS256'
   });
 
-  const refreshToken = jwt.sign(base, REFRESH_SECRET, {
-    expiresIn: REFRESH_TTL,
+  const refreshToken = jwt.sign(base, SECRETO_REFRESH, {
+    expiresIn: TTL_REFRESH,
     algorithm: 'HS256'
   });
 
   return { accessToken, refreshToken };
 }
 
-// ── Token verification ────────────────────────────────────────
+// ── Verificación de tokens ────────────────────────────────────
 
 /**
- * Verify and decode an access token.
- * @throws jwt.JsonWebTokenError | jwt.TokenExpiredError on invalid input
+ * Verifica y decodifica un token de acceso.
+ * @throws jwt.JsonWebTokenError si el token es inválido
+ * @throws jwt.TokenExpiredError si el token ha expirado
  */
-export function verifyAccessToken(token: string): TokenPayload {
-  return jwt.verify(token, ACCESS_SECRET) as TokenPayload;
+export function verificarAccessToken(token: string): PayloadToken {
+  return jwt.verify(token, SECRETO_ACCESO) as PayloadToken;
 }
 
 /**
- * Verify and decode a refresh token.
- * Also checks the Redis blacklist to reject revoked tokens.
+ * Verifica y decodifica un refresh token.
+ * Además consulta la lista negra en Redis para rechazar tokens revocados.
+ *
+ * @throws Error si el token está en la lista negra
+ * @throws jwt.JsonWebTokenError | jwt.TokenExpiredError si el token es inválido
  */
-export async function verifyRefreshToken(token: string): Promise<TokenPayload> {
-  const payload = jwt.verify(token, REFRESH_SECRET) as TokenPayload;
+export async function verificarRefreshToken(token: string): Promise<PayloadToken> {
+  const payload = jwt.verify(token, SECRETO_REFRESH) as PayloadToken;
 
-  // Check blacklist
+  // Verificar contra la lista negra de Redis
   const redis = getRedisClient();
-  const isBlacklisted = await redis.get(`${BLACKLIST_PREFIX}${token}`);
-  if (isBlacklisted) {
-    throw new Error('Token revoked');
+  const estaEnListaNegra = await redis.get(`${PREFIJO_BLACKLIST}${token}`);
+
+  if (estaEnListaNegra) {
+    throw new Error('Token revocado — sesión inválida');
   }
 
   return payload;
 }
 
-// ── Token revocation ──────────────────────────────────────────
+// ── Revocación de tokens ──────────────────────────────────────
 
 /**
- * Blacklist a refresh token in Redis until its natural expiry.
- * Called on logout or when a compromise is detected.
+ * Agrega un refresh token a la lista negra en Redis.
+ * Se llama en logout o cuando se detecta una posible vulneración.
+ *
+ * El TTL de Redis coincide con la vida útil restante del token para
+ * limpiar automáticamente las entradas expiradas.
  */
-export async function revokeRefreshToken(token: string): Promise<void> {
+export async function revocarRefreshToken(token: string): Promise<void> {
   try {
-    const payload = jwt.decode(token) as TokenPayload | null;
+    const payload = jwt.decode(token) as PayloadToken | null;
     if (!payload?.exp) return;
 
-    const ttl = payload.exp - Math.floor(Date.now() / 1000);
-    if (ttl <= 0) return; // already expired, no need to blacklist
+    // Calcular tiempo de vida restante del token
+    const ttlRestante = payload.exp - Math.floor(Date.now() / 1000);
+    if (ttlRestante <= 0) return; // Token ya expirado — no necesita revocación
 
     const redis = getRedisClient();
-    await redis.set(`${BLACKLIST_PREFIX}${token}`, '1', { EX: ttl });
+    await redis.set(`${PREFIJO_BLACKLIST}${token}`, '1', { EX: ttlRestante });
+
   } catch {
-    // Silently ignore decode errors — expired/invalid tokens are already invalid
+    // Ignorar errores de decodificación — tokens inválidos ya son ineficaces
   }
 }
 
-// ── Cookie helpers ────────────────────────────────────────────
+// ── Opciones de cookie para refresh token ────────────────────
 
-/** Returns the cookie options for storing the refresh token securely */
-export function refreshCookieOptions() {
-  const isProduction = process.env.NODE_ENV === 'production';
+/**
+ * Opciones de cookie para el refresh token.
+ * Máxima seguridad: HttpOnly, SameSite Strict, Secure, path restringido.
+ *
+ * - path '/api/auth': la cookie SOLO se envía a rutas de autenticación
+ * - httpOnly: inaccesible desde JavaScript — protege contra XSS
+ * - sameSite 'strict': no se envía en solicitudes de origen cruzado — protege contra CSRF
+ */
+export function opcionesCookieRefresh() {
+  const esProduccion = process.env['NODE_ENV'] === 'production';
   return {
     httpOnly: true,
-    sameSite: isProduction ? ('strict' as const) : ('lax' as const),
-    secure: isProduction,
-    path: '/api/auth',   // Scoped to auth routes only
-    maxAge: 7 * 24 * 60 * 60 * 1000  // 7 days in ms
+    sameSite: esProduccion ? ('strict' as const) : ('lax' as const),
+    secure: esProduccion,
+    path: '/api/auth',              // Alcance mínimo — solo rutas de autenticación
+    maxAge: 7 * 24 * 60 * 60 * 1000 // 7 días en milisegundos
   };
 }
