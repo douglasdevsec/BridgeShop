@@ -1,0 +1,272 @@
+/* ============================================================
+   BridgeShop — Global Styles
+   Design System: Inter (body) + Space Grotesk (headings)
+   Palette: Deep navy / Electric indigo / Amber accent
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap');
+
+/* --- CSS Custom Properties (Design Tokens) --- */
+:root {
+  /* Brand Colors */
+  --bs-primary: #4f46e5; /* Electric Indigo */
+  --bs-primary-dark: #3730a3;
+  --bs-primary-light: #818cf8;
+  --bs-accent: #f59e0b; /* Amber */
+  --bs-accent-dark: #d97706;
+  --bs-success: #10b981;
+  --bs-danger: #ef4444;
+  --bs-warning: #f59e0b;
+
+  /* Neutrals */
+  --bs-bg: #0f0f1a; /* Deep navy */
+  --bs-surface: #1a1a2e;
+  --bs-surface-2: #252540;
+  --bs-border: #2d2d4a;
+  --bs-text: #e2e8f0;
+  --bs-text-muted: #94a3b8;
+  --bs-text-strong: #f8fafc;
+
+  /* Typography */
+  --bs-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --bs-font-display: 'Space Grotesk', sans-serif;
+
+  /* Spacing scale */
+  --bs-radius-sm: 6px;
+  --bs-radius-md: 10px;
+  --bs-radius-lg: 16px;
+  --bs-radius-xl: 24px;
+
+  /* Shadows */
+  --bs-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --bs-shadow-md: 0 4px 20px rgba(0, 0, 0, 0.5);
+  --bs-shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.6);
+  --bs-shadow-glow: 0 0 30px rgba(79, 70, 229, 0.3);
+
+  /* Transitions */
+  --bs-transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Reset & Base --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--bs-font-body);
+  background-color: var(--bs-bg);
+  color: var(--bs-text);
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- Typography --- */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--bs-font-display);
+  color: var(--bs-text-strong);
+  line-height: 1.2;
+}
+
+a {
+  color: var(--bs-primary-light);
+  text-decoration: none;
+  transition: color var(--bs-transition);
+}
+
+a:hover {
+  color: var(--bs-primary);
+}
+
+/* --- Utility Classes --- */
+.bs-container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.bs-surface {
+  background: var(--bs-surface);
+  border: 1px solid var(--bs-border);
+  border-radius: var(--bs-radius-md);
+}
+
+.bs-glass {
+  background: rgba(26, 26, 46, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--bs-radius-lg);
+}
+
+/* --- Buttons --- */
+.bs-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  font-family: var(--bs-font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: var(--bs-radius-sm);
+  border: none;
+  cursor: pointer;
+  transition: all var(--bs-transition);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.bs-btn-primary {
+  background: var(--bs-primary);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(79, 70, 229, 0.3);
+}
+.bs-btn-primary:hover {
+  background: var(--bs-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--bs-shadow-glow);
+}
+.bs-btn-primary:active {
+  transform: scale(0.97);
+}
+
+.bs-btn-outline {
+  background: transparent;
+  color: var(--bs-primary-light);
+  border: 1px solid var(--bs-border);
+}
+.bs-btn-outline:hover {
+  border-color: var(--bs-primary);
+  color: var(--bs-primary);
+  background: rgba(79, 70, 229, 0.08);
+}
+
+.bs-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* --- Form Elements --- */
+.bs-input {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  background: var(--bs-surface-2);
+  border: 1px solid var(--bs-border);
+  border-radius: var(--bs-radius-sm);
+  color: var(--bs-text);
+  font-family: var(--bs-font-body);
+  font-size: 0.875rem;
+  transition:
+    border-color var(--bs-transition),
+    box-shadow var(--bs-transition);
+  outline: none;
+}
+.bs-input:focus {
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+.bs-input::placeholder {
+  color: var(--bs-text-muted);
+}
+
+/* --- Badges --- */
+.bs-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2em 0.6em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 100px;
+  line-height: 1;
+}
+.bs-badge-primary {
+  background: rgba(79, 70, 229, 0.2);
+  color: var(--bs-primary-light);
+}
+.bs-badge-success {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--bs-success);
+}
+.bs-badge-danger {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--bs-danger);
+}
+
+/* --- Animations --- */
+@keyframes bs-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes bs-pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(79, 70, 229, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(79, 70, 229, 0.6);
+  }
+}
+
+.bs-animate-in {
+  animation: bs-fade-in 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+/* --- Scrollbar --- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bs-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bs-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--bs-primary);
+}
+
+/* --- NuxtLink active state --- */
+.router-link-active {
+  color: var(--bs-primary-light);
+}
+
+/* --- Page transitions --- */
+.page-enter-active,
+.page-leave-active {
+  transition: all 0.25s ease;
+}
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(12px);
+}
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
+}
