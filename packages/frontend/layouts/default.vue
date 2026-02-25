@@ -175,10 +175,9 @@ watch(
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(15, 15, 26, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: var(--bs-surface);
   border-bottom: 1px solid var(--bs-border);
+  box-shadow: var(--bs-shadow-xs);
 }
 
 .bs-navbar__inner {

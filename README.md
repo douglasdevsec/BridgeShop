@@ -1,107 +1,193 @@
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-<p align="center">
-<img width="60" height="68" alt="EverShop Logo" src="https://raw.githubusercontent.com/evershopcommerce/evershop/dev/.github/images/logo-green.png"/>
-</p>
-<p align="center">
-  <h1 align="center">EverShop</h1>
-</p>
-<h4 align="center">
-    <a href="https://evershop.io/docs/development/getting-started/introduction">Documentation</a> |
-    <a href="https://demo.evershop.io/">Demo</a>
-</h4>
+<div align="center">
 
-<p align="center">
-  <img src="https://github.com/evershopcommerce/evershop/actions/workflows/build_test.yml/badge.svg" alt="Github Action"> <a href="https://twitter.com/evershopjs"><img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/evershopjs?style=social"></a> <a href="https://discord.gg/GSzt7dt7RM"><img src="https://img.shields.io/discord/757179260417867879?label=discord" alt="Discord"></a> <a href="https://opensource.org/licenses/GPL-3.0"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License"></a>
-</p>
+<img src="./bridgeshop-logo.png" alt="BridgeShop Logo" width="520"/>
 
-<p align="center">
-<img alt="EverShop" width="950" src="https://raw.githubusercontent.com/evershopcommerce/evershop/dev/.github/images/banner.png"/>
-</p>
+# BridgeShop
 
-## Introduction
+**Enterprise-Grade E-Commerce Platform**
 
-EverShop is a modern, TypeScript-first eCommerce platform built with GraphQL and React. Designed for developers, it offers essential commerce features in a modular, fully customizable architecture—perfect for building tailored shopping experiences with confidence and speed.
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Vue 3](https://img.shields.io/badge/Vue-3.x-4FC08D?logo=vue.js)](https://vuejs.org/)
+[![Nuxt 3](https://img.shields.io/badge/Nuxt-3.x-00DC82?logo=nuxt.js)](https://nuxt.com/)
+[![Node.js](https://img.shields.io/badge/Node.js-20.x-339933?logo=node.js)](https://nodejs.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16.x-4169E1?logo=postgresql)](https://www.postgresql.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 
-## Installation Using Docker
+> **Created and led by [Douglas Puente](https://github.com/douglasdevsec)** — Systems Engineer & Cybersecurity Specialist
 
+</div>
 
-You can get started with EverShop in minutes by using the Docker image. The Docker image is a great way to get started with EverShop without having to worry about installing dependencies or configuring your environment.
+---
 
-```bash
-curl -sSL https://raw.githubusercontent.com/evershopcommerce/evershop/main/docker-compose.yml > docker-compose.yml
-docker compose up -d
+## 📖 About BridgeShop
+
+**BridgeShop** is a modern, security-first, AI-ready e-commerce platform built on three pillars:
+
+1. **Performance** — Vue 3 + Nuxt 3 SSR for sub-second page loads, perfect Core Web Vitals and clean UX inspired by the best e-commerce platforms.
+2. **Security** — Hardened backend with OWASP Top 10 mitigations, prepared statements, rate limiting, strict CSP, JWT rotation and Redis-backed sessions.
+3. **Intelligence** — Native WebMCP (Model Context Protocol) integration allowing AI agents to query the catalog, check stock and manage carts via JSON-RPC 2.0.
+
+---
+
+## 🏛️ Open Source Foundation
+
+> BridgeShop was built upon the original open-source **[EverShop](https://github.com/evershopcommerce/evershop)** project, created by [The Nguyen](https://evershop.io).
+>
+> **Important:** The codebase has been **completely refactored** by Douglas Puente into a new technology stack. All frontend, security, DevOps and AEO layers have been rewritten from scratch. The original project's license (GPL-3.0) is preserved and credited below.
+>
+> Thank you to the EverShop contributors for providing a solid foundation.
+
+| | Original (EverShop) | BridgeShop |
+|-|---------------------|------------|
+| **Frontend** | React 17 + Webpack 5 | **Vue 3 + Nuxt 3 (SSR)** |
+| **State** | Custom (urql) | **Pinia** |
+| **Sessions** | session-file-store | **Redis** |
+| **Validation** | AJV | **Zod + vee-validate** |
+| **Security** | Basic | **Helmet, CSRF, Rate Limiting, Argon2** |
+| **AI Agents** | ❌ | **WebMCP (MCP Protocol)** |
+| **SEO** | Basic | **JSON-LD schema.org + sitemap** |
+
+---
+
+## 👤 Author & Leadership
+
+| Role | 
+|------|
+| **Project Creator & Lead Architect** — Douglas Puente |
+| **Security Architecture** — OWASP Top 10 · Defensive Security |
+| **AEO / SEO Strategy** — WebMCP · schema.org · JSON-LD |
+| **GitHub** — [douglasdevsec](https://github.com/douglasdevsec) |
+
+---
+
+## 🏗️ Architecture
+
+```mermaid
+graph TB
+    subgraph Client["Client Layer"]
+        B[Browser / PWA]
+        A[AI Agent via MCP]
+    end
+
+    subgraph Frontend["Frontend — Nuxt 3 / Vue 3"]
+        N[Nuxt 3 SSR]
+        V[Vue 3 Components · Composition API]
+        P[Pinia Stores · Cart · User · Catalog]
+    end
+
+    subgraph Backend["Backend — Node.js / Express"]
+        API[REST API]
+        GQL[GraphQL API]
+        MCP[MCP Server · WebMCP]
+        SEC[Security Layer · Helmet · CSRF · Rate Limit]
+    end
+
+    subgraph Data["Data Layer"]
+        PG[(PostgreSQL 16)]
+        RD[(Redis · Sessions · Blacklist)]
+    end
+
+    B --> N --> V --> P
+    N --> API --> SEC --> PG
+    A --> MCP --> API
+    SEC --> RD
 ```
 
-For the full installation guide, please refer to our [Installation guide](https://evershop.io/docs/development/getting-started/installation-guide).
+---
 
-## Documentation
+## 🛠️ Tech Stack
 
-- [Installation guide](https://evershop.io/docs/development/getting-started/installation-guide).
+| Layer | Technology | Version |
+|-------|-----------|---------|
+| **Frontend** | Vue 3 · Nuxt 3 · Pinia · Vite | 3.x · 3.15 |
+| **UI System** | Nuxt UI · Tailwind · lucide-vue-next | — |
+| **Forms** | vee-validate + Zod | 4.x |
+| **Backend** | Node.js · Express · GraphQL Yoga | 20 LTS |
+| **Database** | PostgreSQL 16 | 16 |
+| **Cache/Sessions** | Redis 7 | 7 |
+| **Security** | Helmet · csrf-csrf · express-rate-limit | — |
+| **AI/AEO** | Model Context Protocol (MCP SDK) | 1.x |
+| **SEO** | nuxt-schema-org · sitemap · robots | — |
+| **Tests** | Vitest · @vue/test-utils · Playwright | 2.x |
+| **CI/CD** | GitHub Actions | — |
 
-- [Extension development](https://evershop.io/docs/development/module/create-your-first-extension).
+---
 
-- [Theme development](https://evershop.io/docs/development/theme/theme-overview).
+## 🔒 Security Features
 
+- ✅ SQL Injection — 100% parameterized queries (Zod + pg driver)
+- ✅ XSS — Strict CSP with nonces, output encoding
+- ✅ Clickjacking — `X-Frame-Options: DENY` + `frame-ancestors 'none'`
+- ✅ CSRF — Double-submit cookie (`csrf-csrf`)
+- ✅ Sessions — HttpOnly + SameSite=Strict + Secure + Redis store
+- ✅ Auth — JWT rotation, refresh tokens, Redis blacklist
+- ✅ Rate Limiting — Auth 5/min, Checkout 10/min, progressive slow-down
+- ✅ Headers — HSTS, Permissions-Policy, Referrer-Policy via Helmet
 
-## Demo
+---
 
-Explore our demo store.
+## 🚀 Getting Started
 
-<p align="left">
-  <a href="https://demo.evershop.io/admin" target="_blank">
-    <img alt="evershop-backend-demo" height="35" alt="EverShop Admin Demo" src="https://raw.githubusercontent.com/evershopcommerce/evershop/dev/.github/images/evershop-demo-back.png"/>
-  </a>
-  <a href="https://demo.evershop.io/" target="_blank">
-    <img alt="evershop-store-demo" height="35" alt="EverShop Store Demo" src="https://raw.githubusercontent.com/evershopcommerce/evershop/dev/.github/images/evershop-demo-front.png"/>
-  </a>
-</p>
-<b>Demo user:</b>
+### With Docker (recommended)
 
-Email: demo@evershop.io<br/>
-Password: 123456
+```bash
+git clone https://github.com/douglasdevsec/bridgeshop.git
+cd bridgeshop
+cp .env.example .env       # fill in your values
+docker-compose up -d       # starts app + PostgreSQL 16 + Redis 7
+npm run db:migrate
+npm run db:seed
+```
 
-## Support
+→ Storefront: **http://localhost:3000**  
+→ Admin: **http://localhost:3000/admin**
 
-If you like my work, feel free to:
+### Manual
 
-- ⭐ this repository. It helps.
-- [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)][tweet] about EverShop. Thank you!
+```bash
+npm install
+createdb bridgeshop
+npm run db:migrate && npm run db:seed
+npm run dev
+```
 
-[tweet]: https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2Fevershopcommerce%2Fevershop&text=Awesome%20React%20Ecommerce%20Project&hashtags=react,ecommerce,expressjs,graphql
+---
 
-## Contributing
+## 🤖 AI Agent Integration (WebMCP)
 
-EverShop is an open-source project. We are committed to a fully transparent development process and appreciate highly any contributions. Whether you are helping us fix bugs, proposing new features, improving our documentation or spreading the word - we would love to have you as part of the EverShop community.
+```json
+// GET /mcp — discovery manifest
+{
+  "name": "BridgeShop",
+  "auth": { "type": "api_key", "header": "X-BridgeShop-Agent-Key" },
+  "tools": ["search_products", "check_stock", "manage_cart"]
+}
+```
 
-### Ask a question about EverShop
+---
 
-You can ask questions, and participate in discussions about EverShop-related topics in the EverShop Discord channel.
+## 🗺️ Roadmap
 
-<a href="https://discord.gg/GSzt7dt7RM"><img src="https://raw.githubusercontent.com/evershopcommerce/evershop/dev/.github/images/discord_banner_github.svg" /></a>
+See [`TASK_PLAN.md`](./TASK_PLAN.md) for the full phase-by-phase plan.
 
-### Create a bug report
+| Phase | Status |
+|-------|--------|
+| Phase 1 — Init, rename, GitHub | ✅ Complete |
+| Phase 2 — Vue 3 / Nuxt 3 Frontend | ✅ Complete |
+| Phase 3 — Security Hardening | 🔄 In Progress |
+| Phase 4 — WebMCP + SEO | ⏳ Pending |
 
-If you see an error message or run into an issue, please [create bug report](https://github.com/evershopcommerce/evershop/issues/new). This effort is valued and it will help all EverShop users.
+---
 
+## 📄 License
 
-### Submit a feature request
+**GNU General Public License v3.0** — See [`LICENSE`](./LICENSE).
 
-If you have an idea, or you're missing a capability that would make development easier and more robust, please [Submit feature request](https://github.com/evershopcommerce/evershop/issues/new).
+Original EverShop code is licensed under GPL-3.0 © The Nguyen / EverShop Contributors.  
+BridgeShop refactor © 2025 Douglas Puente.
 
-If a similar feature request already exists, don't forget to leave a "+1".
-If you add some more information such as your thoughts and vision about the feature, your comments will be embraced warmly :)
+---
 
-
-Please refer to our [Contribution Guidelines](./CONTRIBUTING.md) and [Code of Conduct](./CODE_OF_CONDUCT.md).
-
-## 🚀 The Future of EverShop
-
-EverShop is seeing rapid organic growth and strong adoption from the developer community. We are now scaling our operations and building **EverShop Cloud**.
-
-If you are a strategic investor interested in the future of Node.js commerce and our mission to set a new standard for modern eCommerce, we’d love to share our vision and roadmap with you.
-
-📩 **Get in touch:** support@evershop.io
-
-## License
-
-[GPL-3.0 License](https://github.com/evershopcommerce/evershop/blob/main/LICENSE)
+<div align="center">
+Built with ❤️ by <strong>Douglas Puente</strong> · <a href="https://github.com/douglasdevsec">@douglasdevsec</a>
+</div>
