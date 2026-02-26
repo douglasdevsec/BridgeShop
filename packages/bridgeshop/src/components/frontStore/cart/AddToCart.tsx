@@ -2,7 +2,7 @@ import {
   useCartDispatch,
   useCartState
 } from '@components/frontStore/cart/CartContext.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import React, { useState, useCallback } from 'react';
 
 export interface ProductInfo {

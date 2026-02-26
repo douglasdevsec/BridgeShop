@@ -5,7 +5,7 @@ import { CartItems } from '@components/frontStore/cart/CartItems.js';
 import { CartTotalSummary } from '@components/frontStore/cart/CartTotalSummary.js';
 import { DefaultCartItemList } from '@components/frontStore/cart/DefaultCartItemList.js';
 import { ShoppingCartEmpty } from '@components/frontStore/cart/ShoppingCartEmpty.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import React from 'react';
 
 const Title: React.FC<{ title: string }> = ({ title }) => {

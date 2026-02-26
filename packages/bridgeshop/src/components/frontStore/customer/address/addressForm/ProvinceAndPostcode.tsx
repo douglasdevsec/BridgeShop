@@ -1,6 +1,6 @@
 import { InputField } from '@components/common/form/InputField.js';
 import { SelectField } from '@components/common/form/SelectField.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import React from 'react';
 
 interface ProvinceAndPostcodeProps {

@@ -1,9 +1,9 @@
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
-import { ApiResponse } from '@evershop/evershop/types/apiResponse';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
+import { ApiResponse } from '@bridgeshop/bridgeshop/types/apiResponse';
 import {
   CustomerAddressGraphql,
   Address
-} from '@evershop/evershop/types/customerAddress';
+} from '@bridgeshop/bridgeshop/types/customerAddress';
 import { produce } from 'immer';
 import React, {
   createContext,

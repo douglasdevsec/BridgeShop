@@ -3,7 +3,7 @@ import { ProductNoThumbnail } from '@components/common/ProductNoThumbnail.js';
 import { Button } from '@components/common/ui/Button.js';
 import { AddToCart } from '@components/frontStore/cart/AddToCart.js';
 import { ProductData } from '@components/frontStore/catalog/ProductContext.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import React, { ReactNode } from 'react';
 import { toast } from 'react-toastify';
 

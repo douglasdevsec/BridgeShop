@@ -1,6 +1,6 @@
 import { getNestedError } from '@components/common/form/utils/getNestedError.js';
 import { Field, FieldLabel } from '@components/common/ui/Field.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import React from 'react';
 import {
   Controller,

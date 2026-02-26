@@ -14,7 +14,7 @@ import {
 } from '@components/frontStore/checkout/CheckoutContext.js';
 import { BillingAddress } from '@components/frontStore/checkout/payment/BillingAddress.js';
 import { PaymentMethods } from '@components/frontStore/checkout/payment/PaymentMethods.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import { CreditCard } from 'lucide-react';
 import React, { useEffect } from 'react';
 import { useWatch } from 'react-hook-form';

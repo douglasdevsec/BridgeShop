@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@components/common/ui/Card.js';
 import { CustomerRegistrationForm } from '@components/frontStore/customer/RegistrationForm.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import React from 'react';
 import { toast } from 'react-toastify';
 

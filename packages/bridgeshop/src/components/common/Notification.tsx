@@ -1,5 +1,5 @@
 import { useAppState } from '@components/common/context/app.js';
-import { get } from '@evershop/evershop/lib/util/get';
+import { get } from '@bridgeshop/bridgeshop/lib/util/get';
 import React from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import './Notification.scss';

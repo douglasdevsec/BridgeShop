@@ -3,7 +3,7 @@ import {
   useCustomer,
   useCustomerDispatch
 } from '@components/frontStore/customer/CustomerContext.jsx';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import { Mail, User } from 'lucide-react';
 import React from 'react';
 import { toast } from 'react-toastify';

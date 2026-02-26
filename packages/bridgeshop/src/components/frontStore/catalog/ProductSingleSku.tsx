@@ -1,6 +1,6 @@
 import Area from '@components/common/Area.js';
 import { useProduct } from '@components/frontStore/catalog/ProductContext.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import React from 'react';
 
 export const ProductSingleSku = () => {

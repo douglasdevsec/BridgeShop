@@ -6,7 +6,7 @@ import {
   CouponActions,
   CouponState
 } from '@components/frontStore/Coupon.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';

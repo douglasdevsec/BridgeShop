@@ -6,7 +6,7 @@ import {
   FilterInput,
   useProductFilter
 } from '@components/frontStore/catalog/ProductFilter.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import React, { useState } from 'react';
 
 export const DefaultAttributeFilterRender: React.FC<{

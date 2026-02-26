@@ -1,6 +1,6 @@
 import { AlertDialog as AlertDialogPrimitive } from '@base-ui/react/alert-dialog';
 import { Button } from '@components/common/ui/Button.js';
-import { cn } from '@evershop/evershop/lib/util/cn';
+import { cn } from '@bridgeshop/bridgeshop/lib/util/cn';
 import * as React from 'react';
 
 function AlertDialog({ ...props }: AlertDialogPrimitive.Root.Props) {

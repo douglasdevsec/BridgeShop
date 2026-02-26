@@ -2,8 +2,8 @@ import {
   useCartState,
   useCartDispatch
 } from '@components/frontStore/cart/CartContext.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
-import { CheckoutData } from '@evershop/evershop/types/checkoutData';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
+import { CheckoutData } from '@bridgeshop/bridgeshop/types/checkoutData';
 import { produce } from 'immer';
 import React, {
   createContext,

@@ -6,8 +6,8 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger
-} from '@evershop/evershop/components/common/ui/NavigationMenu';
-import { cn } from '@evershop/evershop/lib/util/cn';
+} from '@bridgeshop/bridgeshop/components/common/ui/NavigationMenu';
+import { cn } from '@bridgeshop/bridgeshop/lib/util/cn';
 import React from 'react';
 
 interface BasicMenuProps {

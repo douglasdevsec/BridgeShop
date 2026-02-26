@@ -1,6 +1,6 @@
 import { Button } from '@components/common/ui/Button.js';
 import { useCheckout } from '@components/frontStore/checkout/CheckoutContext.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import React from 'react';
 import { useWatch } from 'react-hook-form';
 import { useCartState } from '../cart/CartContext.js';

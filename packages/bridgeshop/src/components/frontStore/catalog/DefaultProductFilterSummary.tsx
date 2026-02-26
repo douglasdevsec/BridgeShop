@@ -10,7 +10,7 @@ import {
   FilterInput,
   PriceRange
 } from '@components/frontStore/catalog/ProductFilter.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import React from 'react';
 
 export const formatPrice = (oldFormatted: string, price: number) => {

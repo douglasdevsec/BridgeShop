@@ -23,7 +23,7 @@ import {
   useCustomer,
   useCustomerDispatch
 } from '@components/frontStore/customer/CustomerContext.jsx';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import { CircleUser } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';

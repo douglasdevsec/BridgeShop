@@ -1,5 +1,5 @@
 import { Checkbox as CheckboxPrimitive } from '@base-ui/react/checkbox';
-import { cn } from '@evershop/evershop/lib/util/cn';
+import { cn } from '@bridgeshop/bridgeshop/lib/util/cn';
 import { CheckIcon } from 'lucide-react';
 import React from 'react';
 

@@ -17,7 +17,7 @@ import {
   TooltipContent,
   TooltipTrigger
 } from '@components/common/ui/Tooltip.js';
-import { cn } from '@evershop/evershop/lib/util/cn';
+import { cn } from '@bridgeshop/bridgeshop/lib/util/cn';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { PanelLeftIcon } from 'lucide-react';
 import * as React from 'react';

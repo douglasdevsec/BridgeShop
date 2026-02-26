@@ -2,7 +2,7 @@
 import { Button } from '@components/common/ui/Button.js';
 import { Input } from '@components/common/ui/Input.js';
 import { Textarea } from '@components/common/ui/Textarea.js';
-import { cn } from '@evershop/evershop/lib/util/cn';
+import { cn } from '@bridgeshop/bridgeshop/lib/util/cn';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 

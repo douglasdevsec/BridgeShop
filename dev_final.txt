@@ -1,0 +1,14 @@
+
+> bridgeshop@2.1.0 dev
+> node ./packages/bridgeshop/dist/bin/dev/index.js
+
+WARNING: No configurations found in configuration directory:C:\Users\dougl\.gemini\antigravity\scratch\BridgeShop\bridgeshop\config
+WARNING: To disable this warning set SUPPRESS_NO_CONFIG_WARNING in the environment.
+[31mΓ¥î[0m [31merror[0m: 
+
+[31mAggregateError [ECONNREFUSED]: [39m
+[31m    at C:\Users\dougl\.gemini\antigravity\scratch\BridgeShop\bridgeshop\node_modules\pg-pool\index.js:45:11[39m
+[31m    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)[39m
+[31m    at async getConnection (file:///C:/Users/dougl/.gemini/antigravity/scratch/BridgeShop/bridgeshop/packages/bridgeshop/dist/lib/postgres/connection.js:64:12)[39m
+[31m    at async migrate (file:///C:/Users/dougl/.gemini/antigravity/scratch/BridgeShop/bridgeshop/packages/bridgeshop/dist/bin/lib/bootstrap/migrate.js:55:46)[39m
+[31m    at async start (file:///C:/Users/dougl/.gemini/antigravity/scratch/BridgeShop/bridgeshop/packages/bridgeshop/dist/bin/lib/startUp.js:42:9)[39m

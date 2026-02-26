@@ -1,6 +1,6 @@
 import Area from '@components/common/Area.js';
 import { Button } from '@components/common/ui/Button.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import React from 'react';
 
 function Name() {

@@ -1,5 +1,5 @@
 import { Avatar as AvatarPrimitive } from '@base-ui/react/avatar';
-import { cn } from '@evershop/evershop/lib/util/cn';
+import { cn } from '@bridgeshop/bridgeshop/lib/util/cn';
 import * as React from 'react';
 
 function Avatar({

@@ -2,7 +2,7 @@ import { ProductData } from '@components/frontStore/catalog/ProductContext.js';
 import { ProductListEmptyRender } from '@components/frontStore/catalog/ProductListEmptyRender.js';
 import { ProductListItemRender } from '@components/frontStore/catalog/ProductListItemRender.js';
 import { ProductListLoadingSkeleton } from '@components/frontStore/catalog/ProductListLoadingSkeleton.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import React, { ReactNode } from 'react';
 
 export interface ProductListProps {

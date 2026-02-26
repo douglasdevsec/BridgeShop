@@ -11,7 +11,7 @@ import { Shipment } from '@components/frontStore/checkout/Shipment.js';
 import React from 'react';
 import './Checkout.scss';
 import { useForm } from 'react-hook-form';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 
 interface CheckoutPageProps {
   placeOrderApi: string;

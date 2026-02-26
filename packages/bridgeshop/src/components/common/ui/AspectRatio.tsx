@@ -1,4 +1,4 @@
-import { cn } from '@evershop/evershop/lib/util/cn';
+import { cn } from '@bridgeshop/bridgeshop/lib/util/cn';
 import React from 'react';
 
 function AspectRatio({

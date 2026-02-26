@@ -6,7 +6,7 @@ import {
   InputGroupAddon,
   InputGroupInput
 } from '@components/common/ui/InputGroup.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import { Eye, EyeClosed } from 'lucide-react';
 import React from 'react';
 import {

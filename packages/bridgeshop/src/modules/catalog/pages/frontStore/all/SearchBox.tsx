@@ -1,5 +1,5 @@
 import { SearchBox as Search } from '@components/frontStore/catalog/SearchBox.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import React from 'react';
 
 interface SearchBoxProps {

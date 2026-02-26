@@ -9,7 +9,7 @@ import {
   VariantGroup,
   AttributeOption
 } from '@components/frontStore/catalog/ProductContext.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import React, { useEffect, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 

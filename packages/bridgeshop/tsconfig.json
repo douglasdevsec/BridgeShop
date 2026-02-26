@@ -21,7 +21,7 @@
     "rootDir": "./src",
     "paths": {
       "@components/*": ["./src/components/*"],
-      "@evershop/evershop/*": ["./src/*"]
+      "@bridgeshop/bridgeshop/*": ["./src/*"]
     }
   },
   "include": ["src"]

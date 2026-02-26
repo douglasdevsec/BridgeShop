@@ -19,7 +19,7 @@ import {
   DialogTitle
 } from '@components/common/ui/Dialog.js';
 import { Label } from '@components/common/ui/Label.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import React from 'react';
 import { useQuery } from 'urql';
 import './General.scss';

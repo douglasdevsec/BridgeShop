@@ -4,8 +4,8 @@ import { InputField } from '@components/common/form/InputField.js';
 import { PasswordField } from '@components/common/form/PasswordField.js';
 import { Button } from '@components/common/ui/Button.js';
 import { useCustomerDispatch } from '@components/frontStore/customer/CustomerContext.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
-import { cn } from '@evershop/evershop/lib/util/cn';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
+import { cn } from '@bridgeshop/bridgeshop/lib/util/cn';
 import { LockKeyhole, Mail } from 'lucide-react';
 import React from 'react';
 

@@ -14,7 +14,7 @@ import {
 } from '@components/frontStore/checkout/CheckoutContext.js';
 import { ShippingMethods } from '@components/frontStore/checkout/shipment/ShippingMethods.js';
 import CustomerAddressForm from '@components/frontStore/customer/address/addressForm/Index.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import { MapPin } from 'lucide-react';
 import React, { useEffect, useRef } from 'react';
 import { useWatch } from 'react-hook-form';

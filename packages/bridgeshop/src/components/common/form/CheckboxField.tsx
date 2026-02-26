@@ -8,7 +8,7 @@ import {
   FieldLegend
 } from '@components/common/ui/Field.js';
 import { Label } from '@components/common/ui/Label.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import React from 'react';
 import {
   useFormContext,

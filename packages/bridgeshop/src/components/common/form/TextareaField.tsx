@@ -2,7 +2,7 @@ import { Tooltip } from '@components/common/form/Tooltip.js';
 import { getNestedError } from '@components/common/form/utils/getNestedError.js';
 import { Field, FieldError, FieldLabel } from '@components/common/ui/Field.js';
 import { Textarea } from '@components/common/ui/Textarea.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import React from 'react';
 import {
   useFormContext,

@@ -8,9 +8,9 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue
-} from '@evershop/evershop/components/common/ui/Select';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
-import { cn } from '@evershop/evershop/lib/util/cn';
+} from '@bridgeshop/bridgeshop/components/common/ui/Select';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
+import { cn } from '@bridgeshop/bridgeshop/lib/util/cn';
 import { ArrowDownWideNarrow, ArrowUpWideNarrow } from 'lucide-react';
 import React, { ReactNode, useCallback } from 'react';
 

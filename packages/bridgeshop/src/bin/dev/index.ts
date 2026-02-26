@@ -7,7 +7,10 @@ function startDev() {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
 
-  const args = [path.resolve(__dirname, 'init.js')];
+  const args = [
+    '-r', 'dotenv/config',
+    path.resolve(__dirname, 'init.js')
+  ];
   const appProcess = spawn('node', args, {
     stdio: ['inherit', 'inherit', 'inherit', 'ipc'],
     env: {

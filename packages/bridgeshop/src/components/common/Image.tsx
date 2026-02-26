@@ -1,4 +1,4 @@
-import { parseImageSizes } from '@evershop/evershop/lib/util/parseImageSizes';
+import { parseImageSizes } from '@bridgeshop/bridgeshop/lib/util/parseImageSizes';
 import React from 'react';
 
 export type ImageProps = {

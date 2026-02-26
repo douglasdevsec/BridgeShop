@@ -1,5 +1,5 @@
 import { useAppState } from '@components/common/context/app.js';
-import { generateComponentKey } from '@evershop/evershop/lib/util/keyGenerator';
+import { generateComponentKey } from '@bridgeshop/bridgeshop/lib/util/keyGenerator';
 import React from 'react';
 import type { ElementType } from 'react';
 

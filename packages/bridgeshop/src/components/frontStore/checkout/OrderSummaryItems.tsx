@@ -2,7 +2,7 @@ import { useAppState } from '@components/common/context/app.js';
 import { Image } from '@components/common/Image.js';
 import { ProductNoThumbnail } from '@components/common/ProductNoThumbnail.js';
 import { OrderItem } from '@components/frontStore/customer/CustomerContext.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import React from 'react';
 
 const OrderSummaryItems: React.FC<{

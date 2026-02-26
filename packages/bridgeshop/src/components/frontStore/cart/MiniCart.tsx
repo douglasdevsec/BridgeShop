@@ -5,7 +5,7 @@ import {
 } from '@components/frontStore/cart/CartContext.js';
 import { DefaultMiniCartDropdown } from '@components/frontStore/cart/DefaultMiniCartDropdown.js';
 import { DefaultMiniCartIcon } from '@components/frontStore/cart/DefaultMiniCartIcon.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import React, { useCallback, useState, useEffect } from 'react';
 
 interface MiniCartProps {

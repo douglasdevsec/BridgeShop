@@ -5,7 +5,7 @@ import { start } from '../lib/startUp.js';
 import { compileTs } from './compileTs.js';
 import enableWatcher from './enableWatcher.js';
 
-await compileTs();
+// await compileTs();
 enableWatcher();
 start({
   command: 'dev',

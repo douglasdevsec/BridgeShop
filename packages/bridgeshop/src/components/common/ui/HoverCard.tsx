@@ -1,5 +1,5 @@
 import { PreviewCard as PreviewCardPrimitive } from '@base-ui/react/preview-card';
-import { cn } from '@evershop/evershop/lib/util/cn';
+import { cn } from '@bridgeshop/bridgeshop/lib/util/cn';
 import React from 'react';
 
 function HoverCard({ ...props }: PreviewCardPrimitive.Root.Props) {

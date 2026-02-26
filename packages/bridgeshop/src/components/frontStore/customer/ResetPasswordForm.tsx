@@ -1,7 +1,7 @@
 import { EmailField } from '@components/common/form/EmailField.js';
 import { Form } from '@components/common/form/Form.js';
 import { Button } from '@components/common/ui/Button.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import { Mail } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';

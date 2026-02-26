@@ -1,4 +1,4 @@
-import { cn } from '@evershop/evershop/lib/util/cn';
+import { cn } from '@bridgeshop/bridgeshop/lib/util/cn';
 import { cva, type VariantProps } from 'class-variance-authority';
 import React from 'react';
 

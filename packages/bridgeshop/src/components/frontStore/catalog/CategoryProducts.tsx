@@ -1,7 +1,7 @@
 import Area from '@components/common/Area.js';
 import { useCategory } from '@components/frontStore/catalog/CategoryContext.js';
 import { ProductList } from '@components/frontStore/catalog/ProductList.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import React from 'react';
 
 export function CategoryProducts() {

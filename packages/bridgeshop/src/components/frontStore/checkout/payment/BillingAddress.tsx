@@ -15,11 +15,11 @@ import {
   useCheckoutDispatch
 } from '@components/frontStore/checkout/CheckoutContext.js';
 import CustomerAddressForm from '@components/frontStore/customer/address/addressForm/Index.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import {
   Address,
   CustomerAddressGraphql
-} from '@evershop/evershop/types/customerAddress';
+} from '@bridgeshop/bridgeshop/types/customerAddress';
 import React, { useEffect, useState } from 'react';
 import { useWatch } from 'react-hook-form';
 

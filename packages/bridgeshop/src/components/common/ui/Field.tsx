@@ -1,7 +1,7 @@
 
 import { Label } from '@components/common/ui/Label.js';
 import { Separator } from '@components/common/ui/Separator.js';
-import { cn } from '@evershop/evershop/lib/util/cn';
+import { cn } from '@bridgeshop/bridgeshop/lib/util/cn';
 import { cva, type VariantProps } from 'class-variance-authority';
 import React, { useMemo } from 'react';
 

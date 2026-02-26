@@ -273,13 +273,13 @@ function installDevDependencies(
 }
 
 function run(root, appName, verbose, originalDirectory, useYarn) {
-  console.log(`Installing ${chalk.cyan('@evershop/evershop')}`);
+  console.log(`Installing ${chalk.cyan('@bridgeshop/bridgeshop')}`);
   checkIfOnline(useYarn)
     .then((isOnline) => ({
       isOnline
     }))
     .then(({ isOnline }) => {
-      const allDependencies = ['@evershop/evershop'];
+      const allDependencies = ['@bridgeshop/bridgeshop'];
       return install(root, useYarn, allDependencies, verbose, isOnline).then(
         async () => {
           await installDevDependencies(

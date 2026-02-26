@@ -3,8 +3,8 @@ import {
   useCheckout,
   useCheckoutDispatch
 } from '@components/frontStore/checkout/CheckoutContext.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
-import { ApiResponse } from '@evershop/evershop/types/apiResponse';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
+import { ApiResponse } from '@bridgeshop/bridgeshop/types/apiResponse';
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
 

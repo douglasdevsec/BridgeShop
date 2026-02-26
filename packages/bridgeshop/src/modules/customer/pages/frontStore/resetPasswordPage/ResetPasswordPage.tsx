@@ -3,7 +3,7 @@ import { InputField } from '@components/common/form/InputField.js';
 import { PasswordField } from '@components/common/form/PasswordField.js';
 import { Button } from '@components/common/ui/Button.js';
 import { ResetPasswordForm } from '@components/frontStore/customer/ResetPasswordForm.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 

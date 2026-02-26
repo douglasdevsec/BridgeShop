@@ -6,7 +6,7 @@ import {
   useProductFilter,
   ProductFilterProps
 } from '@components/frontStore/catalog/ProductFilter.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import React, { useState, useMemo } from 'react';
 
 export const DefaultPriceFilterRender: React.FC<{

@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow
 } from '@components/common/ui/Table.js';
-import { _ } from '@evershop/evershop/lib/locale/translate/_';
+import { _ } from '@bridgeshop/bridgeshop/lib/locale/translate/_';
 import React from 'react';
 
 export interface TableColumn<T = any> {

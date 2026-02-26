@@ -1,5 +1,5 @@
 import { Progress as ProgressPrimitive } from '@base-ui/react/progress';
-import { cn } from '@evershop/evershop/lib/util/cn';
+import { cn } from '@bridgeshop/bridgeshop/lib/util/cn';
 import React from 'react';
 
 function Progress({
