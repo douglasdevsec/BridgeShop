@@ -54,12 +54,12 @@ export function generarParTokens(payload: PayloadToken): ParTokens {
   const base = { sub: payload.sub, email: payload.email, role: payload.role };
 
   const accessToken = jwt.sign(base, SECRETO_ACCESO, {
-    expiresIn: TTL_ACCESO,
+    expiresIn: TTL_ACCESO as any,
     algorithm: 'HS256'
   });
 
   const refreshToken = jwt.sign(base, SECRETO_REFRESH, {
-    expiresIn: TTL_REFRESH,
+    expiresIn: TTL_REFRESH as any,
     algorithm: 'HS256'
   });
 

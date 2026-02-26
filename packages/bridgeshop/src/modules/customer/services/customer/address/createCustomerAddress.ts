@@ -1,7 +1,7 @@
+import type { PoolClient } from 'pg';
 import {
   commit,
   insert,
-  PoolClient,
   rollback,
   select,
   startTransaction,
@@ -15,8 +15,7 @@ import { validateAddress } from './addressValidators.js';
 
 async function insertCustomerAddressData(
   data: Address,
-  connection: PoolClient
-): Promise<Address> {
+  connection: PoolClient): Promise<Address> {
   const address = await insert('customer_address')
     .given(data)
     .execute(connection);

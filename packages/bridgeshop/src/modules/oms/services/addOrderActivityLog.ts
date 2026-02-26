@@ -1,12 +1,12 @@
-import { insert, PoolClient } from '@bridgeshop/postgres-query-builder';
+import type { PoolClient } from 'pg';
+import { insert, } from '@bridgeshop/postgres-query-builder';
 import { hookable } from '../../../lib/util/hookable.js';
 
 async function addOrderActivityLog(
   orderId: number,
   message: string,
   notifyCustomer: boolean,
-  connection: PoolClient
-) {
+  connection: PoolClient) {
   /* Add an activity log message */
   const log = await insert('order_activity')
     .given({
@@ -22,8 +22,7 @@ export default async (
   orderId: number,
   message: string,
   notifyCustomer: boolean,
-  connection: PoolClient
-) => {
+  connection: PoolClient) => {
   return await hookable(addOrderActivityLog, {
     orderId,
     message,

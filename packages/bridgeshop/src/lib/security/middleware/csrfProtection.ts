@@ -19,12 +19,13 @@ import type { RequestHandler } from 'express';
 /** Indica si la aplicación está corriendo en entorno de producción */
 const esProduccion = process.env['NODE_ENV'] === 'production';
 
-const { generateToken, doubleCsrfProtection } = doubleCsrf({
+const { generateCsrfToken, doubleCsrfProtection } = doubleCsrf({
   /**
    * Secreto para firmar el token CSRF.
    * Debe coincidir con APP_SECRET o usar un secreto dedicado en producción.
    */
   getSecret: () => process.env['APP_SECRET'] ?? 'bridgeshop-csrf-secret-cambiar-en-produccion',
+  getSessionIdentifier: (req: any) => req.session?.id || req.sessionID || 'anonymous',
 
   /**
    * Configuración de la cookie:
@@ -49,7 +50,7 @@ const { generateToken, doubleCsrfProtection } = doubleCsrf({
    * 1. Header X-CSRF-Token (préferible — XHR / fetch)
    * 2. Campo oculto _csrf en el cuerpo del formulario (HTML forms)
    */
-  getTokenFromRequest: (req) =>
+  getCsrfTokenFromRequest: (req) =>
     (req.headers['x-csrf-token'] as string) ??
     (req.body?._csrf as string)
 });
@@ -74,6 +75,6 @@ export const csrfProtection: RequestHandler = doubleCsrfProtection;
  *   router.get('/csrf-token', getCsrfToken)
  */
 export const getCsrfToken: RequestHandler = (req, res) => {
-  const token = generateToken(req, res);
+  const token = generateCsrfToken(req, res);
   res.json({ csrfToken: token });
 };

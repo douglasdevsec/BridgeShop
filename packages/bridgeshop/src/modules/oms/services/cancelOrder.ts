@@ -1,8 +1,8 @@
+import type { PoolClient } from 'pg';
 import {
   commit,
   execute,
   getConnection,
-  PoolClient,
   rollback,
   select,
   startTransaction
@@ -39,15 +39,13 @@ function validateStatus(paymentStatus: string, shipmentStatus: string) {
 
 async function updatePaymentStatusToCancel(
   orderID: number,
-  connection: PoolClient
-) {
+  connection: PoolClient) {
   await updatePaymentStatus(orderID, 'canceled', connection);
 }
 
 async function updateShipmentStatusToCancel(
   orderID: number,
-  connection: PoolClient
-) {
+  connection: PoolClient) {
   await updateShipmentStatus(orderID, 'canceled', connection);
 }
 

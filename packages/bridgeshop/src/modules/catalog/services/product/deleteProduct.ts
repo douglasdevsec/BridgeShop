@@ -1,3 +1,4 @@
+import type { PoolClient } from 'pg';
 import {
   startTransaction,
   commit,
@@ -5,7 +6,7 @@ import {
   select,
   del
 } from '@bridgeshop/postgres-query-builder';
-import type { PoolClient } from '@bridgeshop/postgres-query-builder';
+import type { } from 'pg';
 import { getConnection } from '../../../../lib/postgres/connection.js';
 import { hookable } from '../../../../lib/util/hookable.js';
 import { ProductData } from './createProduct.js';

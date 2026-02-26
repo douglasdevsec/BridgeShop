@@ -1,3 +1,4 @@
+import type { PoolClient } from 'pg';
 import {
   commit,
   insert,
@@ -6,7 +7,7 @@ import {
   select,
   startTransaction
 } from '@bridgeshop/postgres-query-builder';
-import type { PoolClient } from '@bridgeshop/postgres-query-builder';
+import type { } from 'pg';
 import { getConnection } from '../../../../lib/postgres/connection.js';
 import { hookable } from '../../../../lib/util/hookable.js';
 import {
@@ -74,8 +75,7 @@ async function insertAttributeOptions(
   attributeType: string,
   attributeCode: string,
   options: { option_text: string }[],
-  connection: PoolClient
-) {
+  connection: PoolClient) {
   // Ignore updating options if it is not present in the data
   if (
     options.length === 0 ||

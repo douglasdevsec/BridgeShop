@@ -1,7 +1,7 @@
+import type { PoolClient } from 'pg';
 import {
   commit,
   del,
-  PoolClient,
   rollback,
   select,
   startTransaction

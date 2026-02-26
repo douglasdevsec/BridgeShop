@@ -18,7 +18,7 @@ import {
   McpSearchProductsSchema,
   McpCheckStockSchema,
   McpManageCartSchema
-} from '../security/validators/validators.js';
+} from '../../lib/security/validators/validators.js';
 
 // ── Server definition ─────────────────────────────────────────
 export const mcpServer = new McpServer({

@@ -1,3 +1,4 @@
+import type { PoolClient } from 'pg';
 import {
   insert,
   select,
@@ -6,8 +7,7 @@ import {
   startTransaction,
   commit,
   rollback,
-  PoolClient
-} from '@bridgeshop/postgres-query-builder';
+  } from '@bridgeshop/postgres-query-builder';
 import { pool } from '../../../lib/postgres/connection.js';
 import { hookable } from '../../../lib/util/hookable.js';
 import { Address } from '../../../types/customerAddress.js';
@@ -107,8 +107,7 @@ async function addBillingAddressService<
  */
 async function saveBillingAddress(
   addressData: Address,
-  connection: PoolClient
-) {
+  connection: PoolClient) {
   // Save address to database
   const result = await insert('cart_address')
     .given(addressData)
@@ -129,8 +128,7 @@ async function saveBillingAddress(
 async function updateCartWithAddress(
   cartId: number,
   addressId: number,
-  connection: PoolClient
-) {
+  connection: PoolClient) {
   await update('cart')
     .given({
       billing_address_id: addressId

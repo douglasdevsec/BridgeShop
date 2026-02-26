@@ -1,6 +1,5 @@
 import fs from 'fs';
-import { PoolClient } from '@bridgeshop/postgres-query-builder';
-import { Pool } from 'pg';
+import { Pool, PoolClient } from 'pg';
 import type { PoolConfig } from 'pg';
 import { getConfig } from '../util/getConfig.js';
 

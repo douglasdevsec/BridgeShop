@@ -1,8 +1,8 @@
+import type { PoolClient } from 'pg';
 import {
   commit,
   getConnection,
   insert,
-  PoolClient,
   rollback,
   select,
   startTransaction,
@@ -40,8 +40,7 @@ export interface SaveOrderItemsContext {
 export type SaveOrderItemsArgs = [
   cart: Cart,
   orderId: number,
-  connection: PoolClient
-];
+  connection: PoolClient];
 
 /** Context available in disableCart hooks via 'this' */
 export interface DisableCartContext {
@@ -75,8 +74,7 @@ async function disableCart(cartId: number, connection: PoolClient) {
 
 async function saveOrder<T = CreateOrderResult>(
   cart: Cart,
-  connection: PoolClient
-): Promise<T> {
+  connection: PoolClient): Promise<T> {
   const shipmentStatusList = getConfig(
     'oms.order.shipmentStatus',
     {}
@@ -153,8 +151,7 @@ async function saveOrder<T = CreateOrderResult>(
 async function saveOrderItems(
   cart: Cart,
   orderId: number,
-  connection: PoolClient
-) {
+  connection: PoolClient) {
   // Save order items
   const items = cart.getItems();
   const savedItems = await Promise.all(

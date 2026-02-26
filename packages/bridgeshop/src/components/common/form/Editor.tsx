@@ -31,7 +31,7 @@ async function loadEditorJS(): Promise<any> {
 }
 
 async function loadEditorJSImage(): Promise<any> {
-  const { default: ImageTool } = await import('@evershop/editorjs-image');
+  const { default: ImageTool } = await import('@bridgeshop/editorjs-image');
   return ImageTool;
 }
 

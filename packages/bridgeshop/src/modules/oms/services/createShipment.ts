@@ -1,3 +1,4 @@
+import type { PoolClient } from 'pg';
 import {
   commit,
   insert,
@@ -5,7 +6,6 @@ import {
   select,
   startTransaction
 } from '@bridgeshop/postgres-query-builder';
-import { PoolClient } from 'pg';
 import { getConnection } from '../../../lib/postgres/connection.js';
 import { hookable } from '../../../lib/util/hookable.js';
 import addOrderActivityLog from './addOrderActivityLog.js';
@@ -15,8 +15,7 @@ async function createShipment(
   orderId: number,
   carrier: string | null,
   trackingNumber: string | null,
-  connection: PoolClient
-) {
+  connection: PoolClient) {
   const result = await insert('shipment')
     .given({
       shipment_order_id: orderId,
@@ -32,8 +31,7 @@ export default async (
   orderUuid: string,
   carrier: string | null,
   trackingNumber: string | null,
-  connection?: PoolClient
-) => {
+  connection?: PoolClient) => {
   const conn = connection || (await getConnection());
 
   const order = await select()

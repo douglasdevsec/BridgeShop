@@ -12,7 +12,7 @@ export async function getSetting<T>(name: string, defaultValue: T): Promise<T> {
   if (!setting) {
     setting = await select().from('setting').execute(pool);
   }
-  const row = setting.find((s) => s.name === name);
+  const row = setting?.find((s: Setting) => s.name === name);
   if (row) {
     return row.value;
   } else {

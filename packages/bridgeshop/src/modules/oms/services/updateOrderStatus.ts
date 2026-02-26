@@ -1,3 +1,4 @@
+import type { PoolClient } from 'pg';
 /**
  * This function will be executed automatically after either shipment status or payment status is updated.
  */
@@ -5,7 +6,6 @@ import {
   commit,
   getConnection,
   insert,
-  PoolClient,
   rollback,
   select,
   startTransaction,
@@ -75,8 +75,7 @@ export function resolveOrderStatus(
 async function updateOrderStatus(
   orderId: number,
   status: string,
-  connection: PoolClient
-): Promise<void> {
+  connection: PoolClient): Promise<void> {
   await update('order')
     .given({
       status
@@ -89,8 +88,7 @@ async function addOrderStatusChangeEvents(
   orderId: number,
   before: string,
   after: string,
-  connection: PoolClient
-): Promise<void> {
+  connection: PoolClient): Promise<void> {
   await insert('event')
     .given({
       name: 'order_status_updated',
@@ -106,8 +104,7 @@ async function addOrderStatusChangeEvents(
 export async function changeOrderStatus(
   orderId: number,
   status: string,
-  conn?: PoolClient
-) {
+  conn?: PoolClient) {
   const statusFlow = getOrderStatusFlow();
   const connection = conn || (await getConnection(pool));
   const order = await select()

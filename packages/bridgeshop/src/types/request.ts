@@ -23,7 +23,7 @@ export interface CurrentUser {
   updated_at: Date;
 }
 
-export interface EvershopRequest extends ExpressRequest {
+export interface BridgeShopRequest extends ExpressRequest {
   isAdmin: boolean;
   currentRoute: Route;
   locals: {

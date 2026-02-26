@@ -1,6 +1,6 @@
+import type { PoolClient } from 'pg';
 import {
   commit,
-  PoolClient,
   rollback,
   select,
   startTransaction,
@@ -16,8 +16,7 @@ import {
 async function updateCustomerPassword(
   customerId: number,
   hash: string,
-  connection: PoolClient
-) {
+  connection: PoolClient) {
   await update('customer')
     .given({
       password: hash

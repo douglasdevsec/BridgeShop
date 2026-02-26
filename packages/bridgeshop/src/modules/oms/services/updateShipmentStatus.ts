@@ -1,7 +1,7 @@
+import type { PoolClient } from 'pg';
 import {
   commit,
   getConnection,
-  PoolClient,
   rollback,
   startTransaction,
   update
@@ -26,8 +26,7 @@ function validateShipmentStatusBeforeUpdate(status: string): boolean {
 async function changeShipmentStatus(
   orderId: number,
   status: string,
-  connection: PoolClient
-) {
+  connection: PoolClient) {
   const order = await update('order')
     .given({
       shipment_status: status
@@ -40,8 +39,7 @@ async function changeShipmentStatus(
 export const updateShipmentStatus = async (
   orderId: number,
   status: string,
-  conn?: PoolClient
-): Promise<void> => {
+  conn?: PoolClient): Promise<void> => {
   const connection = conn || (await getConnection(pool));
   try {
     if (!conn) {

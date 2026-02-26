@@ -1,3 +1,4 @@
+import type { PoolClient } from 'pg';
 import {
   commit,
   insert,
@@ -7,7 +8,7 @@ import {
   startTransaction,
   update
 } from '@bridgeshop/postgres-query-builder';
-import type { PoolClient } from '@bridgeshop/postgres-query-builder';
+import type { } from 'pg';
 import { JSONSchemaType } from 'ajv';
 import { getConnection } from '../../../../lib/postgres/connection.js';
 import { getBaseUrl } from '../../../../lib/util/getBaseUrl.js';

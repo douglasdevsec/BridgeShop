@@ -1,4 +1,5 @@
-import type { PoolClient } from '@bridgeshop/postgres-query-builder';
+import type { PoolClient } from 'pg';
+import type { } from 'pg';
 import {
   startTransaction,
   commit,
@@ -45,8 +46,7 @@ async function updateAttributeOptions(
   attributeType: string,
   attributeCode: string,
   options: { option_text: string, option_id: string | number }[],
-  connection: PoolClient
-) {
+  connection: PoolClient) {
   // Ignore updating options if it is not present in the data or if the attribute type is not select or multiselect
   if (
     !['select', 'multiselect'].includes(attributeType)

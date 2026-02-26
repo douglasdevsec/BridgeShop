@@ -1,6 +1,6 @@
+import type { PoolClient } from 'pg';
 import {
   commit,
-  PoolClient,
   rollback,
   select,
   startTransaction,
@@ -15,8 +15,7 @@ import { validateAddress } from './addressValidators.js';
 async function updateCustomerAddressData(
   uuid: string,
   data: Partial<Address>,
-  connection: PoolClient
-): Promise<Address> {
+  connection: PoolClient): Promise<Address> {
   const query = select().from('customer_address');
   const address = await query.where('uuid', '=', uuid).load(connection);
   try {
