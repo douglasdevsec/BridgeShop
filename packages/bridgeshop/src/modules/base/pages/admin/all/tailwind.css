@@ -56,7 +56,7 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.53 0.11 167.71);
+  --primary: oklch(0.55 0.15 250);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -68,7 +68,7 @@
   --border: oklch(0.922 0 0);
   --divider: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(70.9% 0.00008 271.152);
+  --ring: oklch(0.55 0.15 250);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -92,7 +92,7 @@
   --popover: oklch(0.17 0.012 180);
   --popover-foreground: oklch(0.95 0.008 180);
   /* Primary: Brighter teal for dark mode */
-  --primary: oklch(0.62 0.14 172);
+  --primary: oklch(0.65 0.15 250);
   --primary-foreground: oklch(0.12 0.02 172);
   /* Secondary: Darker teal variant */
   --secondary: oklch(0.25 0.04 172);
@@ -107,7 +107,7 @@
   --destructive: oklch(0.62 0.24 27);
   --border: oklch(0.26 0.02 172);
   --input: oklch(0.24 0.02 172);
-  --ring: oklch(0.62 0.14 172);
+  --ring: oklch(0.65 0.15 250);
   /* Chart colors: Adjusted for dark mode visibility */
   --chart-1: oklch(0.7 0.16 172);
   --chart-2: oklch(0.65 0.18 200);
@@ -117,10 +117,10 @@
   /* Sidebar: Dark teal tinted background */
   --sidebar: oklch(0.16 0.015 172);
   --sidebar-foreground: oklch(0.92 0.01 172);
-  --sidebar-primary: oklch(0.62 0.14 172);
+  --sidebar-primary: oklch(0.65 0.15 250);
   --sidebar-primary-foreground: oklch(0.12 0.02 172);
   --sidebar-accent: oklch(0.24 0.03 172);
   --sidebar-accent-foreground: oklch(0.9 0.04 172);
   --sidebar-border: oklch(0.28 0.025 172);
-  --sidebar-ring: oklch(0.62 0.14 172);
+  --sidebar-ring: oklch(0.65 0.15 250);
 }

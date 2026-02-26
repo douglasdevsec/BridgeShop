@@ -1,3 +1,8 @@
+/**
+ * Componente HeadTags para gestionar el título, meta tags, scripts y estilos
+ * globales de la tienda pública. Modificado para corregir las advertencias
+ * sobre espacios en blanco dentro de la etiqueta <head>.
+ */
 import { Og } from '@components/frontStore/Og.js';
 import React, {
   LinkHTMLAttributes,
@@ -71,12 +76,12 @@ export default function HeadTags({
       {scripts.map((script, index) => (
         <script key={index} {...script} />
       ))}
-      {favicon && <link rel="icon" href={favicon} />}
-      {keywords && keywords.length > 0 && (
+      {favicon ? <link rel="icon" href={favicon} /> : null}
+      {keywords && keywords.length > 0 ? (
         <meta name="keywords" content={keywords.join(', ')} />
-      )}
-      {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
-      {base && <base {...base} />}
+      ) : null}
+      {canonicalUrl ? <link rel="canonical" href={canonicalUrl} /> : null}
+      {base ? <base {...base} /> : null}
       <Og
         type={ogInfo.type}
         title={title}

@@ -1,3 +1,8 @@
+/**
+ * Componente Button reutilizable estilizado con Tailwind CSS.
+ * Modificado para usar React.forwardRef y solucionar las advertencias de
+ * paso de refs al usarlo junto con componentes de @base-ui/react.
+ */
 import { Button as ButtonPrimitive } from '@base-ui/react/button';
 import { cn } from '@bridgeshop/bridgeshop/lib/util/cn';
 import { cva, type VariantProps } from 'class-variance-authority';
@@ -43,28 +48,38 @@ const buttonVariants = cva(
   }
 );
 
-function Button({
-  className,
-  variant = 'default',
-  size = 'default',
-  isLoading = false,
-  disabled,
-  children,
-  ...props
-}: ButtonPrimitive.Props &
-  VariantProps<typeof buttonVariants> & {
-    isLoading?: boolean;
-  }) {
-  return (
-    <ButtonPrimitive
-      data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
-      disabled={disabled || isLoading}
-      {...props}
-    >
-      {isLoading ? <Spinner /> : children}
-    </ButtonPrimitive>
-  );
-}
+const Button = React.forwardRef<
+  HTMLButtonElement,
+  ButtonPrimitive.Props &
+    VariantProps<typeof buttonVariants> & {
+      isLoading?: boolean;
+    }
+>(
+  (
+    {
+      className,
+      variant = 'default',
+      size = 'default',
+      isLoading = false,
+      disabled,
+      children,
+      ...props
+    },
+    ref
+  ) => {
+    return (
+      <ButtonPrimitive
+        data-slot="button"
+        ref={ref}
+        className={cn(buttonVariants({ variant, size, className }))}
+        disabled={disabled || isLoading}
+        {...props}
+      >
+        {isLoading ? <Spinner /> : children}
+      </ButtonPrimitive>
+    );
+  }
+);
+Button.displayName = 'Button';
 
 export { Button, buttonVariants };
