@@ -183,6 +183,12 @@ interface StoreSettingProps {
     storeCity: string;
     storeProvince: string;
     storePostalCode: string;
+    // Configuración de marca — Fase 5.4
+    storeLogo?: string;
+    storeLogoWidth?: number;
+    storeLogoHeight?: number;
+    storePrimaryColor?: string;
+    storeCopyright?: string;
   };
 }
 
@@ -197,7 +203,13 @@ export default function StoreSetting({
     storeAddress,
     storeCity,
     storeProvince,
-    storePostalCode
+    storePostalCode,
+    // Campos de marca
+    storeLogo,
+    storeLogoWidth,
+    storeLogoHeight,
+    storePrimaryColor,
+    storeCopyright
   }
 }: StoreSettingProps) {
   const [selectedCountry, setSelectedCountry] = React.useState(() => {
@@ -324,6 +336,67 @@ export default function StoreSetting({
                   </div>
                 </div>
               </CardContent>
+              {/* ── Sección de Marca (Fase 5.4) ── */}
+              <CardContent className="pt-3 border-t border-border space-y-4">
+                <CardTitle>Marca y Apariencia</CardTitle>
+                <CardDescription>
+                  Personaliza el logo, colores y pie de página de tu tienda.
+                </CardDescription>
+
+                {/* Logo URL */}
+                <InputField
+                  name="storeLogo"
+                  label="URL del Logo"
+                  placeholder="https://ejemplo.com/logo.png"
+                  defaultValue={storeLogo || ''}
+                />
+
+                {/* Dimensiones del logo */}
+                <div className="grid grid-cols-2 gap-4">
+                  <InputField
+                    name="storeLogoWidth"
+                    label="Ancho del Logo (px)"
+                    type="number"
+                    placeholder="160"
+                    defaultValue={storeLogoWidth ? String(storeLogoWidth) : '160'}
+                  />
+                  <InputField
+                    name="storeLogoHeight"
+                    label="Alto del Logo (px)"
+                    type="number"
+                    placeholder="50"
+                    defaultValue={storeLogoHeight ? String(storeLogoHeight) : '50'}
+                  />
+                </div>
+
+                {/* Color primario de la marca */}
+                <div className="flex items-end gap-4">
+                  <div className="flex-1">
+                    <InputField
+                      name="storePrimaryColor"
+                      label="Color Primario (hex)"
+                      placeholder="#1e40af"
+                      defaultValue={storePrimaryColor || '#1e40af'}
+                    />
+                  </div>
+                  <div
+                    className="w-10 h-10 rounded-lg border border-border shadow-sm flex-shrink-0 mb-1"
+                    style={{ backgroundColor: storePrimaryColor || '#1e40af' }}
+                    title="Vista previa del color"
+                  />
+                </div>
+
+                {/* Copyright personalizable */}
+                <InputField
+                  name="storeCopyright"
+                  label="Texto de Copyright del Footer"
+                  placeholder="© 2025 Mi Tienda. Todos los derechos reservados."
+                  defaultValue={storeCopyright || ''}
+                />
+                <p className="text-muted-foreground text-xs">
+                  El copyright de BridgeShop y del creador siempre se muestra de forma fija.
+                </p>
+              </CardContent>
             </Card>
           </Form>
         </div>
@@ -351,6 +424,12 @@ export const query = `
       storeCity
       storeProvince
       storePostalCode
+      # Campos de marca — Fase 5.4
+      storeLogo
+      storeLogoWidth
+      storeLogoHeight
+      storePrimaryColor
+      storeCopyright
     }
   }
 `;

@@ -11,4 +11,10 @@ extend type Setting {
   storeCity: String
   storeProvince: String
   storePostalCode: String
+  # Configuración de marca — Fase 5.4
+  storeLogo: String
+  storeLogoWidth: Int
+  storeLogoHeight: Int
+  storePrimaryColor: String
+  storeCopyright: String
 }
