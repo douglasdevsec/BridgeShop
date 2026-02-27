@@ -36,10 +36,29 @@ export default function BasicMenu({
   const [isOpen, setIsOpen] = React.useState(!isMain);
   const isMobile = useIsMobile();
   const [currentPath, setCurrentPath] = React.useState('');
+  // Referencia al contenedor principal para detectar clics fuera
+  const menuRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     setCurrentPath(window.location.pathname);
   }, []);
+
+  // Cerrar el menú al hacer clic fuera del componente
+  React.useEffect(() => {
+    if (!isMain || !isMobile) return;
+    const handler = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [isMain, isMobile]);
+
+  // Cerrar el menú al cambiar de tamaño a escritorio
+  React.useEffect(() => {
+    if (!isMobile && isMain) setIsOpen(false);
+  }, [isMobile, isMain]);
 
   const isActive = (url: string) => {
     if (url === '/') {
@@ -49,46 +68,55 @@ export default function BasicMenu({
   };
 
   const toggleMenu = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((prev) => !prev);
   };
 
   return (
-    <div className={className}>
+    <div className={className} ref={menuRef}>
       <div className="flex justify-start gap-4 items-center">
         <nav className="p-2 relative md:flex md:justify-center w-full">
           <div className="flex justify-between items-center w-full">
             {isMain && isMobile && (
-              <div>
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    toggleMenu();
-                  }}
-                  className="text-black focus:outline-none"
+              <button
+                onClick={toggleMenu}
+                aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
+                aria-expanded={isOpen}
+                className="text-foreground focus:outline-none p-1 rounded-md hover:bg-muted transition-colors"
+              >
+                {/* Botón hamburguesa / X animado */}
+                <svg
+                  className="w-6 h-6 transition-transform duration-200"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
                 >
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
+                  {isOpen ? (
+                    // Ícono X para cerrar
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  ) : (
+                    // Ícono hamburguesa para abrir
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth="2"
                       d="M4 6h16M4 12h16m-7 6h7"
                     />
-                  </svg>
-                </a>
-              </div>
+                  )}
+                </svg>
+              </button>
             )}
             <div
               className={cn(
                 isMain
-                  ? 'md:flex absolute md:relative -left-10 md:left-0 top-full md:top-auto mt-2 md:mt-0 w-screen md:w-auto p-2 md:p-0 min-w-62.5 bg-white md:bg-transparent z-30'
-                  : 'flex relative -left-10 md:left-0 w-screen md:w-auto p-2 md:p-0 min-w-62.5 bg-white md:bg-transparent',
+                  ? 'md:flex absolute md:relative left-0 top-full md:top-auto mt-2 md:mt-0 w-screen md:w-auto p-4 md:p-0 bg-background md:bg-transparent z-40 shadow-lg md:shadow-none border-t md:border-0 border-border'
+                  : 'flex relative left-0 w-screen md:w-auto p-2 md:p-0 bg-background md:bg-transparent',
                 isOpen ? 'block' : 'hidden',
                 'md:flex'
               )}
@@ -123,7 +151,8 @@ export default function BasicMenu({
                       ) : (
                         <NavigationMenuLink
                           href={item.url}
-                          className="w-full md:w-auto px-4 py-2 hover:text-primary data-[active=true]:bg-transparent data-[active=true]:hover:bg-transparent transition-colors data-[active=true]:text-primary data-[active=true]:font-semibold hover:bg-transparent focus:bg-transparent hover:underline text-xl md:text-base"
+                          onClick={() => isMobile && setIsOpen(false)}
+                          className="w-full md:w-auto px-4 py-3 md:py-2 hover:text-primary data-[active=true]:bg-transparent data-[active=true]:hover:bg-transparent transition-colors data-[active=true]:text-primary data-[active=true]:font-semibold hover:bg-transparent focus:bg-transparent hover:underline text-xl md:text-base"
                           data-active={isActive(item.url)}
                         >
                           {item.name}
