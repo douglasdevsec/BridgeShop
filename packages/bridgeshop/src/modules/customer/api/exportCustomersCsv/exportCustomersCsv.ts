@@ -2,21 +2,15 @@
  * exportCustomersCsv.ts
  *
  * API REST — GET /api/customers/export/csv
- * Exporta toda la lista de clientes en formato CSV.
+ * Exporta la lista de clientes en formato CSV (sin datos sensibles).
  *
- * Seguridad:
- *   - Requiere sesión administrativa activa.
- *   - Campos exportados son solo los permitidos para reportes internos.
- *   - No se exportan contraseñas ni tokens de sesión.
+ * NOTA DE FIX: Se usa pool.query con SQL crudo en lugar del query builder
+ * porque @bridgeshop/postgres-query-builder no soporta aliases de tabla.
  *
  * Fase 5.5 — Plan BridgeShop
  */
 
-import { select } from '@bridgeshop/postgres-query-builder';
-import type { BridgeShopRequest } from '../../../../types/request.js';
-import type { BridgeShopResponse } from '../../../../types/response.js';
-
-// ── Función helper para escapar valores CSV ───────────────────────────────────
+// ── Helper: escapar valores CSV ─────────────────────────────────────────────
 function escapeCsvValue(value: unknown): string {
   if (value === null || value === undefined) return '';
   const str = String(value);
@@ -26,26 +20,32 @@ function escapeCsvValue(value: unknown): string {
   return str;
 }
 
-// ── Handler principal ─────────────────────────────────────────────────────────
+// ── Handler ─────────────────────────────────────────────────────────────────
 export default async function exportCustomersCsv(
-  request: BridgeShopRequest,
-  response: BridgeShopResponse
+  request: any,
+  response: any
 ): Promise<void> {
   try {
-    const { pool } = request as any;
+    const pool = request.pool;
+    if (!pool) {
+      throw new Error('Pool de base de datos no disponible en el request');
+    }
 
-    const customers = await select('c.customer_id')
-      .select('c.email')
-      .select('c.full_name')
-      .select('c.status')
-      .select('c.group_id')
-      .select('c.created_at')
-      .from('customer', 'c')
-      .execute(pool);
+    // Solo se exportan campos no sensibles: sin contraseñas ni tokens
+    const result = await pool.query(`
+      SELECT
+        customer_id,
+        full_name,
+        email,
+        status,
+        group_id,
+        created_at
+      FROM customer
+      ORDER BY created_at DESC
+    `);
 
-    // Encabezados del CSV — sin campos sensibles
     const headers = ['ID', 'Nombre', 'Email', 'Estado', 'Grupo', 'Registrado'];
-    const rows = customers.map((c: any) => [
+    const rows = result.rows.map((c: any) => [
       escapeCsvValue(c.customer_id),
       escapeCsvValue(c.full_name),
       escapeCsvValue(c.email),
@@ -54,16 +54,14 @@ export default async function exportCustomersCsv(
       escapeCsvValue(c.created_at)
     ]);
 
-    const csv = [headers, ...rows]
-      .map((row) => row.join(','))
-      .join('\n');
+    const csv = [headers, ...rows].map((row) => row.join(',')).join('\n');
 
+    // BOM para compatibilidad con Excel
     response.setHeader('Content-Type', 'text/csv; charset=utf-8');
     response.setHeader(
       'Content-Disposition',
       `attachment; filename="clientes_${new Date().toISOString().slice(0, 10)}.csv"`
     );
-    // BOM para Excel
     response.send('\uFEFF' + csv);
   } catch (error) {
     response.status(500).json({
