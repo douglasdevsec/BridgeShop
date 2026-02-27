@@ -25,6 +25,7 @@ interface PriceValue {
 
 interface FeaturedProductItem {
   productId: number;
+  uuid: string;
   name: string;
   sku: string;
   price: {
@@ -117,6 +118,7 @@ export const query = `
   query FeaturedProductsQuery($featuredProductsCount: Int) {
     featuredProducts(limit: $featuredProductsCount) {
       productId
+      uuid
       name
       sku
       price {
