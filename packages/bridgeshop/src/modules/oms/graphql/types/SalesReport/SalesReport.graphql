@@ -1,0 +1,22 @@
+"""
+Reporte de ventas para el panel administrativo.
+"""
+type SalesReportOrderItem {
+  orderId: Int!
+  orderNumber: String!
+  customer: String!
+  total: String!
+  status: String!
+  createdAt: String!
+}
+
+type SalesReportData {
+  totalRevenue: String!
+  totalOrders: Int!
+  averageOrderValue: String!
+  orders: [SalesReportOrderItem]!
+}
+
+extend type Query {
+  salesReport: SalesReportData
+}
