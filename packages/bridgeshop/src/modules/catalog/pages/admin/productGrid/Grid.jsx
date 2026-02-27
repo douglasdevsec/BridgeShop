@@ -38,6 +38,7 @@ import { Check } from 'lucide-react';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { ProductNameRow } from './rows/ProductName.js';
+import CsvImportExportButtons from '@components/admin/CsvImportExportButtons.js';
 
 function Actions({ products = [], selectedIds = [] }) {
   const { openAlert, closeAlert } = useAlertContext();
@@ -289,17 +290,25 @@ export default function ProductGrid({
           </div>
         </Form>
         <CardAction>
-          <Button
-            variant="link"
-            className={'hover:cursor-pointer'}
-            onClick={() => {
-              const url = new URL(document.location);
-              url.search = '';
-              window.location.href = url.href;
-            }}
-          >
-            Clear Filters
-          </Button>
+          <div className="flex items-center gap-3">
+            {/* Botones de importación/exportación CSV (Fase 5.5) */}
+            <CsvImportExportButtons
+              exportUrl="/api/products/export/csv"
+              importUrl="/api/products/import/csv"
+              entityName="Productos"
+            />
+            <Button
+              variant="link"
+              className={'hover:cursor-pointer'}
+              onClick={() => {
+                const url = new URL(document.location);
+                url.search = '';
+                window.location.href = url.href;
+              }}
+            >
+              Clear Filters
+            </Button>
+          </div>
         </CardAction>
       </CardHeader>
       <CardContent>

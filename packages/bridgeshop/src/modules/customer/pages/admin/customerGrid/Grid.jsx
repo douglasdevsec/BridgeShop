@@ -35,6 +35,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { CustomerName } from './rows/CustomerName.js';
+import CsvImportExportButtons from '@components/admin/CsvImportExportButtons.js';
 
 function Actions({ customers = [], selectedIds = [] }) {
   const { openAlert, closeAlert } = useAlertContext();
@@ -216,17 +217,25 @@ export default function CustomerGrid({
           </div>
         </Form>
         <CardAction>
-          <Button
-            variant="link"
-            className={'hover:cursor-pointer'}
-            onClick={() => {
-              const url = new URL(document.location);
-              url.search = '';
-              window.location.href = url.href;
-            }}
-          >
-            Clear filter
-          </Button>
+          <div className="flex items-center gap-3">
+            {/* Botones de importación/exportación CSV (Fase 5.5) */}
+            <CsvImportExportButtons
+              exportUrl="/api/customers/export/csv"
+              importUrl="/api/customers/import/csv"
+              entityName="Clientes"
+            />
+            <Button
+              variant="link"
+              className={'hover:cursor-pointer'}
+              onClick={() => {
+                const url = new URL(document.location);
+                url.search = '';
+                window.location.href = url.href;
+              }}
+            >
+              Clear filter
+            </Button>
+          </div>
         </CardAction>
       </CardHeader>
       <CardContent>

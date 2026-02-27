@@ -1,0 +1,5 @@
+{
+  "methods": ["GET"],
+  "path": "/api/products/export/csv",
+  "name": "Export Products CSV"
+}
