@@ -1,5 +1,7 @@
 import { SettingMenu } from '@components/admin/SettingMenu.js';
 import Spinner from '@components/admin/Spinner.js';
+import LogoUploader from '@components/admin/LogoUploader.js';
+import ColorPaletteSelector from '@components/admin/ColorPaletteSelector.js';
 import Area from '@components/common/Area.js';
 import { EmailField } from '@components/common/form/EmailField.js';
 import { Form, useFormContext } from '@components/common/form/Form.js';
@@ -337,65 +339,45 @@ export default function StoreSetting({
                 </div>
               </CardContent>
               {/* ── Sección de Marca (Fase 5.4) ── */}
-              <CardContent className="pt-3 border-t border-border space-y-4">
+              <CardContent className="pt-3 border-t border-border space-y-6">
                 <CardTitle>Marca y Apariencia</CardTitle>
                 <CardDescription>
                   Personaliza el logo, colores y pie de página de tu tienda.
                 </CardDescription>
 
-                {/* Logo URL */}
-                <InputField
-                  name="storeLogo"
-                  label="URL del Logo"
-                  placeholder="https://ejemplo.com/logo.png"
-                  defaultValue={storeLogo || ''}
-                />
-
-                {/* Dimensiones del logo */}
-                <div className="grid grid-cols-2 gap-4">
-                  <InputField
-                    name="storeLogoWidth"
-                    label="Ancho del Logo (px)"
-                    type="number"
-                    placeholder="160"
-                    defaultValue={storeLogoWidth ? String(storeLogoWidth) : '160'}
-                  />
-                  <InputField
-                    name="storeLogoHeight"
-                    label="Alto del Logo (px)"
-                    type="number"
-                    placeholder="50"
-                    defaultValue={storeLogoHeight ? String(storeLogoHeight) : '50'}
+                {/* — Logo (carga desde archivo local) — */}
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-sm">Logo de la Tienda</h3>
+                  <LogoUploader
+                    currentLogo={storeLogo}
+                    currentWidth={storeLogoWidth ?? 160}
+                    currentHeight={storeLogoHeight ?? 50}
                   />
                 </div>
 
-                {/* Color primario de la marca */}
-                <div className="flex items-end gap-4">
-                  <div className="flex-1">
-                    <InputField
-                      name="storePrimaryColor"
-                      label="Color Primario (hex)"
-                      placeholder="#1e40af"
-                      defaultValue={storePrimaryColor || '#1e40af'}
-                    />
-                  </div>
-                  <div
-                    className="w-10 h-10 rounded-lg border border-border shadow-sm flex-shrink-0 mb-1"
-                    style={{ backgroundColor: storePrimaryColor || '#1e40af' }}
-                    title="Vista previa del color"
+                {/* — Paleta de Colores — */}
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-sm">Colores de la Tienda</h3>
+                  <ColorPaletteSelector
+                    currentColors={{
+                      primary: storePrimaryColor || '#1e40af'
+                    }}
                   />
                 </div>
 
-                {/* Copyright personalizable */}
-                <InputField
-                  name="storeCopyright"
-                  label="Texto de Copyright del Footer"
-                  placeholder="© 2025 Mi Tienda. Todos los derechos reservados."
-                  defaultValue={storeCopyright || ''}
-                />
-                <p className="text-muted-foreground text-xs">
-                  El copyright de BridgeShop y del creador siempre se muestra de forma fija.
-                </p>
+                {/* — Copyright personalizable — */}
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-sm">Copyright del Footer</h3>
+                  <InputField
+                    name="storeCopyright"
+                    label=""
+                    placeholder="© 2025 Mi Tienda. Todos los derechos reservados."
+                    defaultValue={storeCopyright || ''}
+                  />
+                  <p className="text-muted-foreground text-xs">
+                    El copyright de BridgeShop y del creador siempre se muestra de forma fija.
+                  </p>
+                </div>
               </CardContent>
             </Card>
           </Form>
