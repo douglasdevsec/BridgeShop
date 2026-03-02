@@ -19,6 +19,8 @@ import { setPageMetaInfo } from '../../modules/cms/services/pageMetaInfo.js';
 // Seguridad — Fase 5.7.1: Helmet (HTTP security headers) y 5.7.2: Rate limiting
 import { cabecerasSeguridad, middlewareNonce } from '../../lib/security/middleware/securityHeaders.js';
 import { limitadorGlobal } from '../../lib/security/middleware/rateLimiter.js';
+// Seguridad — Fase 5.7.4: Protección CSRF (Double-Submit Cookie)
+import { csrfProtection, getCsrfToken } from '../../lib/security/middleware/csrfProtection.js';
 import { getDevMiddleware, getHotMiddleware } from './devEnvHelper.js';
 
 export function addDefaultMiddlewareFuncs(app) {
@@ -30,6 +32,17 @@ export function addDefaultMiddlewareFuncs(app) {
 
   // ── Seguridad: Rate limiting global sobre todas las rutas /api/*
   app.use('/api', limitadorGlobal);
+
+  // ── Seguridad: CSRF Protection — únicamente en rutas mutantes /api/*
+  // GET y solicitudes de navegación no requieren token CSRF
+  app.get('/api/csrf-token', getCsrfToken);
+  app.use('/api', (req, res, next) => {
+    const method = req.method.toUpperCase();
+    if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
+      return csrfProtection(req, res, next);
+    }
+    next();
+  });
 
 
   app.use((request, response, next) => {
