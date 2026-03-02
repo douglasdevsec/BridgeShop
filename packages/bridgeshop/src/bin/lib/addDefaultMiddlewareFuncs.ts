@@ -16,9 +16,22 @@ import { getAdminSessionCookieName } from '../../modules/auth/services/getAdminS
 import { getCookieSecret } from '../../modules/auth/services/getCookieSecret.js';
 import { getFrontStoreSessionCookieName } from '../../modules/auth/services/getFrontStoreSessionCookieName.js';
 import { setPageMetaInfo } from '../../modules/cms/services/pageMetaInfo.js';
+// Seguridad — Fase 5.7.1: Helmet (HTTP security headers) y 5.7.2: Rate limiting
+import { cabecerasSeguridad, middlewareNonce } from '../../lib/security/middleware/securityHeaders.js';
+import { limitadorGlobal } from '../../lib/security/middleware/rateLimiter.js';
 import { getDevMiddleware, getHotMiddleware } from './devEnvHelper.js';
 
 export function addDefaultMiddlewareFuncs(app) {
+  // ── Seguridad: Nonce CSP (debe ir ANTES de Helmet para que res.locals.cspNonce exista)
+  app.use(middlewareNonce());
+
+  // ── Seguridad: Helmet — HTTP security headers (CSP, HSTS, X-Frame-Options, etc.)
+  cabecerasSeguridad().forEach((mw) => app.use(mw));
+
+  // ── Seguridad: Rate limiting global sobre todas las rutas /api/*
+  app.use('/api', limitadorGlobal);
+
+
   app.use((request, response, next) => {
     response.debugMiddlewares = [];
     next();
