@@ -123,7 +123,7 @@ export default function BasicMenu({
             >
               <NavigationMenu className="w-full max-w-full">
                 <NavigationMenuList className="flex-col md:flex-row items-start md:items-center w-full md:w-auto">
-                  {menus.map((item) => (
+                {menus.map((item) => (
                     <NavigationMenuItem
                       key={item.uuid}
                       className="w-full md:w-auto"
@@ -160,6 +160,19 @@ export default function BasicMenu({
                       )}
                     </NavigationMenuItem>
                   ))}
+
+                  {/* ── Enlace fijo: Servicios (Fase 5.6.2) ── */}
+                  <NavigationMenuItem className="w-full md:w-auto">
+                    <NavigationMenuLink
+                      href="/servicios"
+                      onClick={() => isMobile && setIsOpen(false)}
+                      className="w-full md:w-auto px-4 py-3 md:py-2 hover:text-primary transition-colors data-[active=true]:text-primary data-[active=true]:font-semibold hover:bg-transparent focus:bg-transparent hover:underline text-xl md:text-base"
+                      data-active={isActive('/servicios')}
+                      aria-label="Ver página de servicios"
+                    >
+                      Servicios
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
                 </NavigationMenuList>
               </NavigationMenu>
             </div>
@@ -167,6 +180,7 @@ export default function BasicMenu({
         </nav>
       </div>
     </div>
+
   );
 }
 
