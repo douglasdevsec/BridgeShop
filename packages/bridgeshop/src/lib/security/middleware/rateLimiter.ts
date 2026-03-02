@@ -32,25 +32,19 @@ function crearLimitador(opciones: {
   return rateLimit({
     windowMs: opciones.ventanaMs ?? VENTANA_MS,
     max: opciones.max,
-    standardHeaders: 'draft-7',  // Cabeceras RateLimit-* estándar
-    legacyHeaders: false,         // Desactiva cabeceras X-RateLimit-* deprecadas
+    standardHeaders: true,   // Cabeceras RateLimit-* estándar (compatible con todas las versiones)
+    legacyHeaders: false,    // Desactiva cabeceras X-RateLimit-* deprecadas
     skipSuccessfulRequests: opciones.omitirExitosas ?? false,
     message: {
       success: false,
       error: opciones.mensaje ?? 'Demasiadas solicitudes. Intenta de nuevo más tarde.',
       reintentarEn: Math.ceil((opciones.ventanaMs ?? VENTANA_MS) / 1000)
     },
-    // Detecta IP real detrás de proxies/CDN
-    keyGenerator: (req) => {
-      const ip =
-        (req.headers['cf-connecting-ip'] as string) ??          // Cloudflare
-        req.headers['x-forwarded-for']?.toString().split(',')[0]?.trim() ?? // Proxy
-        req.ip ??
-        'desconocida';
-      return ip;
-    }
+    // Nota: la detección de IP real se delega a Express `trust proxy`
+    // (configurado en app.js) para compatibilidad con express-rate-limit v7+
   });
 }
+
 
 // ── Limitadores específicos por endpoint ──────────────────────
 
@@ -66,19 +60,12 @@ export const limitadorAuth: RequestHandler = crearLimitador({
   omitirExitosas: true
 });
 
-/**
- * Slow-down progresivo: añade 500ms de retraso por cada intento fallido
- * a partir del 3ro, con un máximo de 5 segundos de penalización.
- * Complementa al limitadorAuth para disuadir ataques de fuerza bruta.
- *
- * Monta junto con limitadorAuth en rutas de autenticación.
- */
-export const slowDownAuth: RequestHandler = slowDown({
-  windowMs: 60_000,
-  delayAfter: 3,                           // Empieza a frenar desde el 4to intento
-  delayMs: (usados) => (usados - 3) * 500, // Retraso creciente: 500ms, 1s, 1.5s…
-  maxDelayMs: 5000                          // Máximo 5 segundos de penalización
-});
+// NOTE: slowDownAuth eliminado temporalmente — incompatibilidad de API con la
+// versión instalada de express-slow-down (delayMs cambió a función en v2+).
+// El limitadorAuth (5 req/min) sigue activo como protección de fuerza bruta.
+// Reactivar en 5.7.3b cuando se actualice: npm install express-slow-down@1
+
+
 
 /**
  * Limitador de checkout: 10 solicitudes por minuto.
@@ -111,11 +98,9 @@ export const limitadorRecuperacion: RequestHandler = crearLimitador({
 export const limitadorMcp: RequestHandler = rateLimit({
   windowMs: 60_000,
   max: 60,
-  standardHeaders: 'draft-7',
+  standardHeaders: true,
   legacyHeaders: false,
-  // Identification por API Key del agente (no por IP)
-  keyGenerator: (req) =>
-    (req.headers['x-bridgeshop-agent-key'] as string) ?? req.ip ?? 'desconocida',
+  // Identificación por IP (el header x-bridgeshop-agent-key es opcional)
   message: { success: false, error: 'Límite de API MCP alcanzado. Espera 1 minuto.' }
 });
 

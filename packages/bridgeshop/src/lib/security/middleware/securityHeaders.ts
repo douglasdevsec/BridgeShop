@@ -100,10 +100,7 @@ export function cabecerasSeguridad(): RequestHandler[] {
     helmet.permittedCrossDomainPolicies({ permittedPolicies: 'none' }),
 
     // ── Oculta que usamos Express/Node.js ────────────────────
-    helmet.hidePoweredBy(),
-
-    // ── Protección XSS para navegadores legacy ────────────────
-    helmet.xssFilter()
+    helmet.hidePoweredBy()
   ];
 }
 
