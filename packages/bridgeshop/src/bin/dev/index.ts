@@ -11,11 +11,17 @@ function startDev() {
     '-r', 'dotenv/config',
     path.resolve(__dirname, 'init.js')
   ];
+  
+  // Encontrar el root absoluto (ej. c:/Users/dougl/..../bridgeshop/.env)
+  // __dirname en dev = packages/bridgeshop/src/bin/dev (5 niveles al root)
+  const rootEnvPath = path.resolve(__dirname, '../../../../../.env');
+
   const appProcess = spawn('node', args, {
     stdio: ['inherit', 'inherit', 'inherit', 'ipc'],
     env: {
       ...process.env,
-      ALLOW_CONFIG_MUTATIONS: true
+      DOTENV_CONFIG_PATH: rootEnvPath,
+      ALLOW_CONFIG_MUTATIONS: 'true'
     }
   });
 

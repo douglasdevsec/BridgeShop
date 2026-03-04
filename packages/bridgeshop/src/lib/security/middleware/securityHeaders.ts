@@ -36,38 +36,45 @@ export function generarNonce(): string {
  *   app.use(cabecerasSeguridad())
  */
 export function cabecerasSeguridad(): RequestHandler[] {
+  const isDev = process.env.NODE_ENV === 'development';
+
   return [
     // ── Content-Security-Policy con soporte de nonce ──────────
     helmet.contentSecurityPolicy({
       directives: {
         defaultSrc: ["'self'"],
 
-        // Solo permite scripts con nonce válido o de dominios de pago confiables
-        scriptSrc: [
-          "'self'",
-          (_req, res) => `'nonce-${(res as any).locals.cspNonce}'`,
-          'https://js.stripe.com',
-          'https://www.paypal.com'
-        ],
+        // En desarrollo: unsafe-eval necesario para webpack HMR y sourcemaps.
+        // En producción: solo scripts con nonce válido o dominios de pago.
+        scriptSrc: isDev
+          ? ["'self'", "'unsafe-eval'", "'unsafe-inline'", 'https://js.stripe.com', 'https://www.paypal.com']
+          : [
+              "'self'",
+              (_req: any, res: any) => `'nonce-${res.locals.cspNonce}'`,
+              'https://js.stripe.com',
+              'https://www.paypal.com'
+            ],
 
         // Estilos con nonce o de Google Fonts
-        styleSrc: [
-          "'self'",
-          (_req, res) => `'nonce-${(res as any).locals.cspNonce}'`,
-          'https://fonts.googleapis.com'
-        ],
+        styleSrc: isDev
+          ? ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com']
+          : [
+              "'self'",
+              (_req: any, res: any) => `'nonce-${res.locals.cspNonce}'`,
+              'https://fonts.googleapis.com'
+            ],
 
         fontSrc:    ["'self'", 'https://fonts.gstatic.com'],
-        imgSrc:     ["'self'", 'data:', 'https:'],
+        imgSrc:     ["'self'", 'data:', 'https:', 'blob:'],
 
         // Conexiones API permitidas
         connectSrc: [
           "'self'",
           'https://api.stripe.com',
           'https://www.paypal.com',
-          // WebSocket en desarrollo local
-          process.env.NODE_ENV === 'development' ? 'ws://localhost:*' : ''
-        ].filter(Boolean) as string[],
+          // WebSocket en desarrollo local (webpack HMR)
+          ...(isDev ? ['ws://localhost:*', 'ws://127.0.0.1:*', 'http://localhost:*'] : [])
+        ],
 
         // iframes solo para proveedores de pago
         frameSrc:       ['https://js.stripe.com', 'https://www.paypal.com'],
@@ -75,7 +82,9 @@ export function cabecerasSeguridad(): RequestHandler[] {
         formAction:     ["'self'"],   // Forms solo envían a nuestro dominio
         objectSrc:      ["'none'"],   // Bloquea plugins (Flash, etc.)
         baseUri:        ["'self'"],   // Previene inyección de base URL
-        upgradeInsecureRequests: []   // Fuerza HTTPS automáticamente
+
+        // upgradeInsecureRequests solo aplica en producción (HTTPS)
+        ...(isDev ? {} : { upgradeInsecureRequests: [] })
       }
     }),
 
@@ -83,12 +92,12 @@ export function cabecerasSeguridad(): RequestHandler[] {
     helmet.frameguard({ action: 'deny' }),
 
     // ── HTTP Strict Transport Security ────────────────────────
-    // maxAge: 1 año — obligatorio para calificación preload de HSTS
-    helmet.hsts({
+    // Solo en producción — local dev usa HTTP
+    ...(isDev ? [] : [helmet.hsts({
       maxAge: 31_536_000,
       includeSubDomains: true,
       preload: true
-    }),
+    })]),
 
     // ── Previene interpretación errónea de tipos MIME ─────────
     helmet.noSniff(),
